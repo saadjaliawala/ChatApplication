@@ -56,7 +56,7 @@ const NotShowTab = ['Details','About'];
   const showTab = (route, array) => {
 
 
-    console.log(route.state,'saad');
+    // console.log(route.state,'saad');
     
     const RouteName = route?.state?.routes[route.state.index]?.name;
     return !array.includes(RouteName);

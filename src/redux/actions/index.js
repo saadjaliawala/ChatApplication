@@ -22,7 +22,7 @@ export const Abcd = (abcd) => {
 const _firebaseFbLogin = async accessToken => {
    
     const fbCredential = auth.FacebookAuthProvider.credential(accessToken);
-    console.log(fbCredential);
+    // console.log(fbCredential);
     return await auth().signInWithCredential(fbCredential);
   };
   
@@ -35,7 +35,7 @@ const _firebaseFbLogin = async accessToken => {
             if (result.isCancelled) {
             } else {
               const {accessToken} = await AccessToken.getCurrentAccessToken();
-              console.log(accessToken);
+              // console.log(accessToken);
   
               const responseInfoCallback = async (error, user) => {
                 if (error) {
@@ -78,12 +78,4 @@ const _firebaseFbLogin = async accessToken => {
 
 
 
-  export const UserDetails = (UserDetails) => {
-
-   return dispatch => {
-     dispatch({
-       type: 'User_Details',
-       payload: UserDetails
-     })
-   } 
-  }
+ 
