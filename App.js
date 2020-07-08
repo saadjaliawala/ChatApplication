@@ -21,6 +21,7 @@ import Navigation from './src/Navigation/Stack.js';
 import store from './src/redux/store';
 import auth from '@react-native-firebase/auth';
 import {UserDetails} from './src/redux/actions/UserDetails.js';
+import {AllUsers} from './src/redux/actions/AllUsers.js';
 
 
 import {
@@ -40,6 +41,8 @@ const [FirebaseUser, SetFirebaseUser] = useState();
   const [isDidUpdate , SetDidUpdate] = useState(true);
 
   const onAuthStateChanged = (FirebaseUser) => {
+
+    let AllUserArray = [];
 
     SetFirebaseUser(FirebaseUser);
       // console.log(FirebaseUser);
@@ -61,9 +64,28 @@ const [FirebaseUser, SetFirebaseUser] = useState();
               uid: FirebaseUser.uid
           } , {merge: true} )
       }
-    //   const { user } = FirebaseUser.user;
-    //   console.log(user);
 
+      
+      firestore()
+      .collection('Users')
+      .get()
+      .then(querySnapshot => {
+        
+         
+         querySnapshot.forEach(documentSnapShot => {
+            //  console.log(documentSnapShot.data());
+             if(FirebaseUser.uid != documentSnapShot.data().uid)
+             {
+             AllUserArray.push(documentSnapShot.data());
+             }
+             
+         })
+
+         store.dispatch(AllUsers(AllUserArray));
+      // console.log("all user array" , AllUserArray);
+        
+      })
+      
   }
 
 

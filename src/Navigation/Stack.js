@@ -8,6 +8,7 @@ import HomeScreen from '../Screens/Home';
 import DetailScreen from '../Screens/Details';
 import AboutScreen from '../Screens/About';
 import ChatScreen from '../Screens/Chat';
+import UsersScreen from '../Screens/Users';
 
 
 
@@ -23,6 +24,7 @@ const ChatScreenStack = () => {
   <Stack.Navigator>
 
   <Stack.Screen name="Chat" component={ChatScreen} />
+  <Stack.Screen name="Users" component={UsersScreen} />
   
     </Stack.Navigator>
  )
@@ -39,7 +41,7 @@ const HomeScreenStack = () => {
     <Stack.Navigator>
     {/* <Tab.Navigator> */}
         <Stack.Screen name="Home" component={HomeScreen} />
-        {/* <Stack.Screen name="Details" component={DetailScreen} /> */}
+        
         {/* <Stack.Screen name="About" component={AboutScreen} /> */}
        
         {/* </Tab.Navigator> */}
@@ -68,6 +70,12 @@ const TabNabigator = () => {
     <Tab.Navigator>
       <Tab.Screen 
       name="Chat" component={ChatScreen}
+      options={({route}) => ({
+        tabBarVisible: showTab(route, NotShowTab),
+      })}
+       />
+        <Tab.Screen 
+      name="Users" component={UsersScreen}
       options={({route}) => ({
         tabBarVisible: showTab(route, NotShowTab),
       })}

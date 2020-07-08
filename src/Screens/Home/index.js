@@ -41,6 +41,8 @@ const HomeScreen = (props) => {
        const signInWithFb = () => {
          store.dispatch(FbLogin());  
        }
+
+       
    
     const GoogleSignIn = async () => {
      

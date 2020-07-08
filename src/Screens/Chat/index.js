@@ -34,7 +34,7 @@ const ChatScreen = () => {
 
      store.subscribe(() => {
 
-      console.log("saad1" , store.getState().UserDetails )
+      // console.log("saad1" , store.getState().UserDetails )
       
       SetFirebaseUser(store.getState().UserDetails);
   
