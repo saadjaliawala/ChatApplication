@@ -9,6 +9,7 @@ import DetailScreen from '../Screens/Details';
 import AboutScreen from '../Screens/About';
 import ChatScreen from '../Screens/Chat';
 import UsersScreen from '../Screens/Users';
+import ChatBoxScreen from '../Screens/ChatBox';
 
 
 
@@ -21,16 +22,27 @@ const Tab = createBottomTabNavigator();
 const ChatScreenStack = () => {
  return(
 
-  <Stack.Navigator>
+  <Stack.Navigator   >
 
   <Stack.Screen name="Chat" component={ChatScreen} />
   <Stack.Screen name="Users" component={UsersScreen} />
   
+  
     </Stack.Navigator>
  )
+}
 
-  
-
+const UserScreenStack = () => {
+  return(
+    <Stack.Navigator>
+      <Stack.Screen name="Users" component={UsersScreen} />
+      <Stack.Screen 
+      options = {() => ({
+        headerShown: false
+      })}
+      name="ChatBox" component={ChatBoxScreen} />
+    </Stack.Navigator>
+  )
 }
 
 
@@ -50,7 +62,7 @@ const HomeScreenStack = () => {
   )
 }
 
-const NotShowTab = ['Details','About'];
+const NotShowTab = ['Details','About' , 'ChatBox' ];
 
 
 
@@ -75,7 +87,7 @@ const TabNabigator = () => {
       })}
        />
         <Tab.Screen 
-      name="Users" component={UsersScreen}
+      name="Users" component={UserScreenStack}
       options={({route}) => ({
         tabBarVisible: showTab(route, NotShowTab),
       })}

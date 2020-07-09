@@ -84,13 +84,17 @@ const _renderUsers = () => {
       {
         AllFirebaseUsers?.user?.map((users) => {
           return(
-              <TouchableOpacity>
+              <TouchableOpacity
+              onPress={() => props.navigation.navigate('ChatBox' , {users} )}
+              >
                 <Text>{users.email}</Text>
                 <Text>{users.name}</Text>
                 <Image 
                   source= {{ uri: users.photoUrl }}
                   style={styles.userImage}
+                  
                 />
+
               </TouchableOpacity>
           );
         })
