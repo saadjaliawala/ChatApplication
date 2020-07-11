@@ -42,6 +42,7 @@ const ChatBoxScreen = (props) => {
       SetChatUser( props.route.params);
       const CurrentUserInApp = store.getState().UserDetails;
       SetCurrentUser(store.getState().UserDetails);
+      console.log(store.getState().UserDetails);
 
 
 
@@ -54,8 +55,9 @@ const ChatBoxScreen = (props) => {
    {
      SetChatIdBool(true);
     Data._data.ChatId.map((ddata) => {
-      console.log(ddata.uid , "Chat id k andaar adeen ki uid");
-      console.log(CurrentChatUserInApp?.users?.uid , "login kra hoa banda ki uid adeen");
+      // console.log(ddata.uid , "Chat id k andaar adeen ki uid");
+      // console.log(CurrentChatUserInApp?.users?.uid , "login kra hoa banda ki uid adeen");
+
       // const Filter = ddata.filter(v => {
       //   console.log("filter" , v);
       // })
@@ -77,7 +79,7 @@ const ChatBoxScreen = (props) => {
           let array = [];
           Data.forEach(Datas => {
             
-            console.log(Datas);
+            // console.log(Datas);
             array.push({ message: Datas._data.message , 
             senderUid: Datas._data.senderUid
             })
@@ -102,7 +104,7 @@ const ChatBoxScreen = (props) => {
    else {
     // SetUidBool(false);
      SetChatIdBool(false);
-     alert("chat id and uid false");
+    //  alert("chat id and uid false");
    }
  })   
 
@@ -213,7 +215,7 @@ firestore()
 })
 }  
 
-
+onChangeText('');
 
  
 }
@@ -222,7 +224,8 @@ firestore()
   const _renderFunction = () => {
     // console.log("current user" , CurrentUser);
       return(
-          <View> 
+
+        <View> 
        {ChatUser && <Header 
        props = {props}
         ChatUser={ChatUser}
@@ -232,6 +235,7 @@ firestore()
 
        const _renderInput = () => {
          return(
+           <View style={{  }} >
            <View style={ styles.InputViewParent } >
              <Entypo 
              name= "emoji-happy"
@@ -244,7 +248,7 @@ firestore()
         multiline={true}
         style= {styles.InputStyle}
         placeholder= "Type a message"
-        // value={value}
+        value={Textvalue}
         />
         <Ionicons 
         name="send"
@@ -254,20 +258,35 @@ firestore()
         onPress={() => SendButtonPress() }
         />
            </View>
+           </View>
          )}
 
 
       const _renderMessages = () => {
         // console.log("user messages" , UserMessages );
         return(
-          <ScrollView>
+          <ScrollView style={{ marginBottom: 62 }} > 
             {UserMessages?.map((messages) => {
-              // console.log(messages);
+              if(CurrentUser.user.uid == messages.senderUid )
+
+             {
               return(
-              <View>
-              <Text>{messages.message}</Text>
-              </View>
-              )
+                <View style={{ alignSelf: "flex-end" , padding: 15  , backgroundColor: 'blue' ,
+                 margin: 10 , borderTopRightRadius: 25 , borderTopLeftRadius: 24  , borderBottomLeftRadius: 24  }} >
+                <Text style={{ color: 'white' }} >{messages.message}</Text>
+                </View>
+                )
+             }
+             else {
+              return(
+                <View style={{ alignSelf: "flex-start" , padding: 15  , backgroundColor: 'blue' ,
+                margin: 10 , borderTopRightRadius: 25 , borderTopLeftRadius: 24  , borderBottomLeftRadius: 24  }} >
+                <Text>{messages.message}</Text>
+                </View>
+                )
+
+             }
+
             })}
           </ScrollView>
         )
