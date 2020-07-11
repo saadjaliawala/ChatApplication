@@ -56,28 +56,47 @@ const ChatBoxScreen = (props) => {
     Data._data.ChatId.map((ddata) => {
       console.log(ddata.uid , "Chat id k andaar adeen ki uid");
       console.log(CurrentChatUserInApp?.users?.uid , "login kra hoa banda ki uid adeen");
+      // const Filter = ddata.filter(v => {
+      //   console.log("filter" , v);
+      // })
       if(ddata.uid == CurrentChatUserInApp?.users?.uid )
       {
         // alert("Uid true");
         SetPushedKey(ddata.pushKey);
         SetUidBool(true);
-        let array = [];
+        
+        
+
         firestore()
       .collection('Chat')
         .doc(ddata.pushKey)
         .collection('Messages')
+        
         .onSnapshot(Data => {
+          
+          let array = [];
           Data.forEach(Datas => {
+            
             console.log(Datas);
+            array.push({ message: Datas._data.message , 
+            senderUid: Datas._data.senderUid
+            })
+            
+            
           })
+          SetUserMessages(array);
+         
         })
+       
+
+       
         
 
       }
-      else {
-        SetUidBool(false);
-        alert("uid falase impo");
-      }
+      // else {
+      //   SetUidBool(false);
+      //   alert("uid falase impo");
+      // }
     })
    }
    else {
@@ -181,7 +200,7 @@ firestore()
 
 if(UidBool  )
 {
-  alert("send uid true run");
+  // alert("send uid true run");
 // alert("booltrue");
 firestore()
 .collection('Chat')
@@ -237,10 +256,30 @@ firestore()
            </View>
          )}
 
+
+      const _renderMessages = () => {
+        // console.log("user messages" , UserMessages );
+        return(
+          <ScrollView>
+            {UserMessages?.map((messages) => {
+              // console.log(messages);
+              return(
+              <View>
+              <Text>{messages.message}</Text>
+              </View>
+              )
+            })}
+          </ScrollView>
+        )
+      }   
+
+
+
   return(
     <View style={{flex: 1 ,  borderWidth: 5}} >
 
       { _renderFunction()}
+      { _renderMessages()}
       { _renderInput()}
     </View>
     
