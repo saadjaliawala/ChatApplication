@@ -44,12 +44,13 @@ const [FirebaseUser, SetFirebaseUser] = useState();
 
     let AllUserArray = [];
 
-    SetFirebaseUser(FirebaseUser);
-      // console.log(FirebaseUser);
+    
+      console.log("firebase user " , FirebaseUser);
       if(FirebaseUser){
+        // alert("Saad");
         store.dispatch(UserDetails(FirebaseUser));
       }
-     
+      SetFirebaseUser(FirebaseUser);
 
       if (FirebaseUser) {
         //   console.log(FirebaseUser);

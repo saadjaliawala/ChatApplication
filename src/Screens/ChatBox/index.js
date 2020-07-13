@@ -20,6 +20,8 @@ import Header from '../../components/Header/index.js';
 import Entypo from 'react-native-vector-icons/Entypo';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import firestore from '@react-native-firebase/firestore';
+import moment from 'moment';
+// import firebase from '@react-native-firebase/firebase';
 // import styles from './style.js';
 
 
@@ -37,12 +39,12 @@ const ChatBoxScreen = (props) => {
   const [UserMessages , SetUserMessages ] = useState([]);
 
   useEffect(() => {
-      // console.log("chat user" , props.route.params);
+      console.log("chat user" , props.route.params);
       const CurrentChatUserInApp = props.route.params;
       SetChatUser( props.route.params);
       const CurrentUserInApp = store.getState().UserDetails;
       SetCurrentUser(store.getState().UserDetails);
-      console.log(store.getState().UserDetails);
+      // console.log(store.getState().UserDetails);
 
 
 
@@ -73,7 +75,7 @@ const ChatBoxScreen = (props) => {
       .collection('Chat')
         .doc(ddata.pushKey)
         .collection('Messages')
-        
+        .orderBy("timeStamp" , "asc")
         .onSnapshot(Data => {
           
           let array = [];
@@ -81,7 +83,8 @@ const ChatBoxScreen = (props) => {
             
             // console.log(Datas);
             array.push({ message: Datas._data.message , 
-            senderUid: Datas._data.senderUid
+            senderUid: Datas._data.senderUid ,
+            timeStamp: Datas._data.timeStamp,
             })
             
             
@@ -139,6 +142,7 @@ alert("Chat id false run");
    message: Textvalue,
   senderUid: CurrentUser.user?.uid ,
   senderName: CurrentUser.user?.displayName,
+  timeStamp : firestore.FieldValue.serverTimestamp(),
 })
 
 firestore()
@@ -147,7 +151,7 @@ firestore()
 
 .update({
   ChatId: firestore.FieldValue.arrayUnion({ uid: ChatUser.users?.uid , name: ChatUser.users?.name ,
-     pushKey: pushKey._documentPath?._parts[1] })
+     pushKey: pushKey._documentPath?._parts[1] ,photoUrl: ChatUser.users?.photoUrl  })
 })
 
 firestore()
@@ -155,7 +159,7 @@ firestore()
 .doc(ChatUser.users?.uid)
 .update({
   ChatId: firestore.FieldValue.arrayUnion ({ uid: CurrentUser.user?.uid , 
-    name: CurrentUser.user?.displayName , pushKey: pushKey._documentPath?._parts[1] })
+    name: CurrentUser.user?.displayName , pushKey: pushKey._documentPath?._parts[1] ,photoUrl: ChatUser.users?.photoUrl })
   
 })
 
@@ -177,6 +181,7 @@ firestore()
   message: Textvalue,
  senderUid: CurrentUser.user?.uid ,
  senderName: CurrentUser.user?.displayName,
+ timeStamp : firestore.FieldValue.serverTimestamp(),
 })
 
 firestore()
@@ -185,7 +190,7 @@ firestore()
 
 .update({
  ChatId: firestore.FieldValue.arrayUnion({ uid: ChatUser.users?.uid , name: ChatUser.users?.name ,
-    pushKey: pushKey._documentPath?._parts[1] })
+    pushKey: pushKey._documentPath?._parts[1] ,photoUrl: ChatUser.users?.photoUrl })
 })
 
 firestore()
@@ -193,7 +198,7 @@ firestore()
 .doc(ChatUser.users?.uid)
 .update({
  ChatId: firestore.FieldValue.arrayUnion ({ uid: CurrentUser.user?.uid , 
-   name: CurrentUser.user?.displayName , pushKey: pushKey._documentPath?._parts[1] })
+   name: CurrentUser.user?.displayName , pushKey: pushKey._documentPath?._parts[1] ,photoUrl: ChatUser.users?.photoUrl })
  
 })
 
@@ -212,6 +217,7 @@ firestore()
   message: Textvalue,
   senderUid: CurrentUser.user?.uid ,
   senderName: CurrentUser.user?.displayName,
+  timeStamp : firestore.FieldValue.serverTimestamp(),
 })
 }  
 
@@ -263,17 +269,25 @@ onChangeText('');
 
 
       const _renderMessages = () => {
-        // console.log("user messages" , UserMessages );
+        console.log("user messages" , UserMessages );
         return(
           <ScrollView style={{ marginBottom: 62 }} > 
             {UserMessages?.map((messages) => {
+              let seconds= messages?.timeStamp?.seconds;
+              let usetime = moment(seconds * 1000).fromNow();
               if(CurrentUser.user.uid == messages.senderUid )
 
              {
               return(
-                <View style={{ alignSelf: "flex-end" , padding: 15  , backgroundColor: 'blue' ,
-                 margin: 10 , borderTopRightRadius: 25 , borderTopLeftRadius: 24  , borderBottomLeftRadius: 24  }} >
+                <View  >
+                <View style={{ alignSelf: "flex-end" , padding: 15  , backgroundColor: 'blue' , minWidth: 100,
+                 marginTop: 20, marginRight: 10, borderTopRightRadius: 25 , borderTopLeftRadius: 24  , borderBottomLeftRadius: 24  }} >
                 <Text style={{ color: 'white' }} >{messages.message}</Text>
+              
+                </View>
+                <View style={{ alignSelf: 'flex-end' , marginRight: 12 }} > 
+                <Text style={{ color: 'grey'  }} >{usetime}</Text>
+                </View>
                 </View>
                 )
              }
