@@ -6,7 +6,8 @@ import {
     Text,
     StatusBar,
     Button,
-    TouchableOpacity
+    TouchableOpacity,
+    Image,
   } from 'react-native';
 
   
@@ -18,11 +19,14 @@ import {
 import { Abcd } from '../../redux/actions/index.js';
 import {UserDetails} from '../../redux/actions/UserDetails.js';
 import firestore from '@react-native-firebase/firestore';
+import moment from 'moment';
+import styles from './style.js';
+import Evillcons from 'react-native-vector-icons/EvilIcons';
 // import { TouchableOpacity } from 'react-native-gesture-handler';
 
 
 
-const ChatScreen = () => {
+const ChatScreen = (props) => {
 
 
   const [FirebaseUser , SetFirebaseUser] = useState();
@@ -51,7 +55,8 @@ const ChatScreen = () => {
         let array = [];
        { Data._data.ChatId  && 
         Data?._data?.ChatId.map((Datas) => {
-          array.push({ name: Datas.name , pushKey: Datas.pushKey , uid: Datas.uid  , photoUrl: Datas.photoUrl })
+          array.push({ name: Datas.name , pushKey: Datas.pushKey , uid: Datas.uid  
+            , photoUrl: Datas.photoUrl , lastMessage: Datas.lastMessage  , timeStamp: Datas.timeStamp })
           // console.log(Datas);
         } )
       
@@ -86,15 +91,57 @@ const ChatScreen = () => {
         )
       }
 
+      const NavigateToChatBox = (Users) => {
+        console.log(Users , "abcjhb");
+        let users = {
+          name: Users.name,
+          uid: Users.uid,
+          photoUrl: Users.photoUrl,
+        }
+        props.navigation.navigate('ChatBox' , {users} )
+      }
+
+      const _renderHeader = () => {
+        return(
+          <View>
+            <Evillcons 
+            name="search"
+            size = {45}
+            color =  'black'
+            style={styles.HeaderStyle}
+            />
+            <View style={{ paddingLeft: 15 , paddingBottom: 15 }} >
+              <Text style={styles.HeaderMessage} >Messages</Text>
+            </View>
+          </View>
+        )
+      }
 
       const _renderChattedUser = () => {
         return(
           <View>
             { ChattedUser?.map(( Users ) => {
+              let fromNowTime = Users.timeStamp;
+              let useTime = moment(fromNowTime).fromNow(true);
         return(
-          // <View>
-             <TouchableOpacity><Text>{Users.name}</Text></TouchableOpacity>
-            //  </View>
+          < TouchableOpacity 
+          onPress={() => NavigateToChatBox(Users) }
+          style={{flexDirection:"row" ,  paddingHorizontal: 15 , paddingTop: 28 }} >
+            <View style={{ width: '20%'  }} > 
+            <Image 
+            source ={{ uri: Users.photoUrl  }}
+            style={ styles.ImageStyle }
+            />
+            </View>
+            <View style={{ width:"80%" , flexDirection: 'column' ,  justifyContent: 'space-between'  }} >
+              <View style={{ flexDirection: 'row' , justifyContent: 'space-between', width: '100%' }} >
+                <View><Text style={{ fontSize: 18 }} >{Users.name}</Text></View>
+                 <View><Text style={{ color: 'grey' }} >{useTime}</Text></View>
+              </View>
+              <View style={{  }} ><Text style={{ color: 'grey' , fontSize: 15 }} >{Users.lastMessage}</Text></View>
+            </View>
+            
+            </TouchableOpacity>
         )
       }) }
           </View>
@@ -104,8 +151,9 @@ const ChatScreen = () => {
 
     return(
       <View>
+        { _renderHeader() }
 
-      { _renderButton() }
+      {/* { _renderButton() } */}
 
       {_renderChattedUser()}
       </View>

@@ -60,26 +60,32 @@ const UsersScreen = (props) => {
 
       useEffect(() => {
         
-        // alert("upar");
-        
-        
-          SetDidUpdate(false);
-    
-       SetAllFirebaseUsers(store.getState().AllUsers);
-       
-      
+      // alert("upar");
 
+        SetDidUpdate(false);
+
+       SetAllFirebaseUsers(store.getState().AllUsers);
       console.log("saad" , AllFirebaseUsers);
 
-
-
       }, [])
+
+      const _renderHeader = () => {
+        return (
+          <View>
+            <View style={{ height: 45 , border: 1 , borderRadius: 20 , borderWidth: 2 ,
+              marginTop: '2%' , borderColor: 'lightgrey' , marginHorizontal: '1%' }} >
+
+            </View>
+            <Text>Header</Text>
+          </View>
+        )
+      }
 
 const _renderUsers = () => {
 
   return(
     <View>
-       <Text>Users Screen</Text>
+       {/* <Text>Users Screen</Text> */}
       {/* { console.log(AllFirebaseUsers) } */}
       {
         AllFirebaseUsers?.user?.map((users) => {
@@ -92,7 +98,6 @@ const _renderUsers = () => {
                 <Image 
                   source= {{ uri: users.photoUrl }}
                   style={styles.userImage}
-                  
                 />
 
               </TouchableOpacity>
@@ -107,7 +112,12 @@ const _renderUsers = () => {
 } 
 
     return(
-     _renderUsers()
+     <View>
+       {_renderHeader()}
+       { _renderUsers()}
+       
+     </View> 
+    
     )
   }
 

@@ -26,6 +26,11 @@ const ChatScreenStack = () => {
 
   <Stack.Screen name="Chat" component={ChatScreen} />
   <Stack.Screen name="Users" component={UsersScreen} />
+  <Stack.Screen 
+  options = {() => ({
+    headerShown: false
+  })}
+  name="ChatBox" component={ChatBoxScreen} />
   
   
     </Stack.Navigator>
@@ -35,7 +40,11 @@ const ChatScreenStack = () => {
 const UserScreenStack = () => {
   return(
     <Stack.Navigator>
-      <Stack.Screen name="Users" component={UsersScreen} />
+      <Stack.Screen 
+       options = {() => ({
+        headerShown: false
+      })}
+      name="Users" component={UsersScreen} />
       <Stack.Screen 
       options = {() => ({
         headerShown: false

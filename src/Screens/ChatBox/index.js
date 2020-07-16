@@ -151,7 +151,8 @@ firestore()
 
 .update({
   ChatId: firestore.FieldValue.arrayUnion({ uid: ChatUser.users?.uid , name: ChatUser.users?.name ,
-     pushKey: pushKey._documentPath?._parts[1] ,photoUrl: ChatUser.users?.photoUrl  })
+     pushKey: pushKey._documentPath?._parts[1] ,photoUrl: ChatUser.users?.photoUrl ,
+     lastMessage: Textvalue ,  timeStamp : new Date().getTime()  })
 })
 
 firestore()
@@ -159,7 +160,9 @@ firestore()
 .doc(ChatUser.users?.uid)
 .update({
   ChatId: firestore.FieldValue.arrayUnion ({ uid: CurrentUser.user?.uid , 
-    name: CurrentUser.user?.displayName , pushKey: pushKey._documentPath?._parts[1] ,photoUrl: ChatUser.users?.photoUrl })
+    name: CurrentUser.user?.displayName , pushKey: pushKey._documentPath?._parts[1] ,photoUrl: ChatUser.users?.photoUrl ,
+    lastMessage: Textvalue ,  timeStamp : new Date().getTime()
+  })
   
 })
 
@@ -190,7 +193,8 @@ firestore()
 
 .update({
  ChatId: firestore.FieldValue.arrayUnion({ uid: ChatUser.users?.uid , name: ChatUser.users?.name ,
-    pushKey: pushKey._documentPath?._parts[1] ,photoUrl: ChatUser.users?.photoUrl })
+    pushKey: pushKey._documentPath?._parts[1] ,photoUrl: ChatUser.users?.photoUrl ,
+    lastMessage: Textvalue ,  timeStamp : new Date().getTime() })
 })
 
 firestore()
@@ -198,7 +202,8 @@ firestore()
 .doc(ChatUser.users?.uid)
 .update({
  ChatId: firestore.FieldValue.arrayUnion ({ uid: CurrentUser.user?.uid , 
-   name: CurrentUser.user?.displayName , pushKey: pushKey._documentPath?._parts[1] ,photoUrl: ChatUser.users?.photoUrl })
+   name: CurrentUser.user?.displayName , pushKey: pushKey._documentPath?._parts[1] ,photoUrl: ChatUser.users?.photoUrl ,
+   lastMessage: Textvalue ,  timeStamp : new Date().getTime()  })
  
 })
 
@@ -219,9 +224,67 @@ firestore()
   senderName: CurrentUser.user?.displayName,
   timeStamp : firestore.FieldValue.serverTimestamp(),
 })
-}  
+let CHATID  ;
+let index;
+firestore()
+.collection('Users')
+.doc(CurrentUser?.user?.uid)
+.get()
+.then(querySnapshot => {
+  CHATID = querySnapshot._data?.ChatId;
+  // console.log(CHATID , "chatt id" );
+  // console.log( "query" ,querySnapshot);
+  querySnapshot._data?.ChatId?.map((Data , i) => {
+    console.log(Data.pushKey == PushedKey );
+    // console.log("data", Data );
+    if(Data.pushKey == PushedKey)
 
-onChangeText('');
+    {
+
+      index = i;
+      CHATID[i].lastMessage = Textvalue;
+      console.log("CHAT ID DONE " , CHATID);
+      firestore()
+      .collection('Users')
+      .doc(CurrentUser?.user?.uid)
+      .update({ChatId: CHATID})
+    
+    }
+  })
+})
+
+  let CHATSIDS ;
+  let indexs;
+
+  firestore()
+  .collection('Users')
+  .doc(ChatUser.users?.uid)
+  .get()
+  .then(querySnapshot => {
+    CHATSIDS = querySnapshot._data?.ChatId;
+
+    querySnapshot._data?.ChatId?.map((Data , i) => {
+      
+      if(Data.pushKey == PushedKey) {
+        indexs = i;
+        CHATSIDS[i].lastMessage = Textvalue;
+        // console.log("CHAT ID DONE " , CHATID);
+        firestore()
+        .collection('Users')
+        .doc(ChatUser.users?.uid)
+        .update({ChatId: CHATID})
+
+      }
+
+    })
+
+  } )
+
+
+
+}
+
+onChangeText("");
 
  
 }
@@ -269,7 +332,7 @@ onChangeText('');
 
 
       const _renderMessages = () => {
-        console.log("user messages" , UserMessages );
+        // console.log("user messages" , UserMessages );
         return(
           <ScrollView style={{ marginBottom: 62 }} > 
             {UserMessages?.map((messages) => {
@@ -283,7 +346,6 @@ onChangeText('');
                 <View style={{ alignSelf: "flex-end" , padding: 15  , backgroundColor: 'blue' , minWidth: 100,
                  marginTop: 20, marginRight: 10, borderTopRightRadius: 25 , borderTopLeftRadius: 24  , borderBottomLeftRadius: 24  }} >
                 <Text style={{ color: 'white' }} >{messages.message}</Text>
-              
                 </View>
                 <View style={{ alignSelf: 'flex-end' , marginRight: 12 }} > 
                 <Text style={{ color: 'grey'  }} >{usetime}</Text>
