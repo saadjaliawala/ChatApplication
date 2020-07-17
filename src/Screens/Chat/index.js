@@ -53,7 +53,7 @@ const ChatScreen = (props) => {
       
       .onSnapshot(Data => {
         let array = [];
-       { Data._data.ChatId  && 
+       { Data?._data?.ChatId  && 
         Data?._data?.ChatId.map((Datas) => {
           array.push({ name: Datas.name , pushKey: Datas.pushKey , uid: Datas.uid  
             , photoUrl: Datas.photoUrl , lastMessage: Datas.lastMessage  , timeStamp: Datas.timeStamp })

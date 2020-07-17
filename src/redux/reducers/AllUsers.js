@@ -7,6 +7,9 @@ const reducer = (state = {}, action) => {
         case 'All_Users': {
           return {...state, user: action.payload}
         }
+        case 'All_Dummy_Users': {
+          return {...state, dummyuser: action.payload}
+        }
   
         default: {
           return state;

@@ -10,3 +10,16 @@
       })
     } 
    }
+
+   
+  export const AllDummyUsers = (AllDummyUsers) => {
+
+
+
+    return dispatch => {
+      dispatch({
+        type: 'All_Dummy_Users',
+        payload: AllDummyUsers
+      })
+    } 
+   }

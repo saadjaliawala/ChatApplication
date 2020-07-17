@@ -7,15 +7,18 @@ import {
     StatusBar,
     Button,
     TouchableOpacity,
-    Image
+    Image, 
+    TextInput
   } from 'react-native';
 
   
   import React , { useEffect , useState } from 'react';
   import firestore from '@react-native-firebase/firestore';
   import {AllUsers} from '../../redux/actions/AllUsers.js';
+  import { SearchAction } from '../../redux/actions/SearchAction.js';
 import store from '../../redux/store.js';
 import styles from './style.js';
+import EvilIcons from 'react-native-vector-icons/EvilIcons'
 
 
 
@@ -23,6 +26,8 @@ const UsersScreen = (props) => {
 
   const [isDidUpdate , SetDidUpdate] = useState(true);
   const [AllFirebaseUsers , SetAllFirebaseUsers] = useState({});
+  const [ InputValue , SetInputValue ] = useState();
+  const [DummyAllFirebaseUsers , SetDummyAllFirebaseUsers ] = useState();
 
     // useEffect(() => {
     //     firestore()
@@ -65,18 +70,54 @@ const UsersScreen = (props) => {
         SetDidUpdate(false);
 
        SetAllFirebaseUsers(store.getState().AllUsers);
-      console.log("saad" , AllFirebaseUsers);
+       console.log(store.getState().AllUsers);
+      store.subscribe(() => {
+        SetAllFirebaseUsers(store.getState().AllUsers);
+
+      } )
+      
 
       }, [])
+
+      const SearchFunction = (text) => {
+        // SetInputValue(text);
+                
+        // let filter = AllFirebaseUsers?.dummyuser?.filter((v, i) => {
+         
+
+        //  return v.name.toLowerCase().startsWith(text.toLowerCase())
+
+        // })
+        // console.log(filter);
+        // store.dispatch(AllUsers(filter));
+
+        store.dispatch(SearchAction(text));
+      }
 
       const _renderHeader = () => {
         return (
           <View>
-            <View style={{ height: 45 , border: 1 , borderRadius: 20 , borderWidth: 2 ,
-              marginTop: '2%' , borderColor: 'lightgrey' , marginHorizontal: '1%' }} >
+            <View style={{ height: 45 , border: 1 , borderRadius: 20 , borderWidth: 1 , elevation: 1 ,
+              marginTop: '2%' , borderColor: 'lightgrey' , marginHorizontal: '1%' , flexDirection: 'row' , 
+              alignItems: 'center', marginBottom: 20   }} >
+
+                <EvilIcons 
+                name = "search"
+                size ={35}
+                color ="grey"
+                // onPress={() => SearchFunction() }
+                />
+
+              <TextInput 
+              onChangeText = { (text) => SearchFunction(text) }
+              placeholder= "Find Friends"
+              style={styles.InputStyle}
+              value={InputValue}
+
+              />
 
             </View>
-            <Text>Header</Text>
+            {/* <Text>Header</Text> */}
           </View>
         )
       }
@@ -93,12 +134,18 @@ const _renderUsers = () => {
               <TouchableOpacity
               onPress={() => props.navigation.navigate('ChatBox' , {users} )}
               >
-                <Text>{users.email}</Text>
-                <Text>{users.name}</Text>
+                <View style={{ flexDirection: 'row' , padding: 10  }} > 
+                  
+                <View>
                 <Image 
                   source= {{ uri: users.photoUrl }}
                   style={styles.userImage}
                 />
+                </View>
+                <View style={{ alignSelf: 'center' , paddingLeft: 20 }} >
+                <Text style={{ fontSize: 17 }} >{users.name}</Text>
+                </View>
+                </View>
 
               </TouchableOpacity>
           );

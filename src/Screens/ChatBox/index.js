@@ -212,7 +212,7 @@ firestore()
 
 if(UidBool  )
 {
-  // alert("send uid true run");
+  alert("send uid true run");
 // alert("booltrue");
 firestore()
 .collection('Chat')
@@ -272,7 +272,7 @@ firestore()
         firestore()
         .collection('Users')
         .doc(ChatUser.users?.uid)
-        .update({ChatId: CHATID})
+        .update({ChatId: CHATSIDS})
 
       }
 
