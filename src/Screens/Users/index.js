@@ -18,7 +18,7 @@ import {
   import { SearchAction } from '../../redux/actions/SearchAction.js';
 import store from '../../redux/store.js';
 import styles from './style.js';
-import EvilIcons from 'react-native-vector-icons/EvilIcons'
+import EvilIcons from 'react-native-vector-icons/EvilIcons';
 
 
 

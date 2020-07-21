@@ -29,6 +29,14 @@ export default styles = StyleSheet.create({
     HeaderMessage: {
         fontSize:  35,
         fontWeight: "bold"
+    },
+    userImage: {
+        height: 55,
+            width: 55,
+            borderRadius: 55,
+            
+
     }
+
 })
 

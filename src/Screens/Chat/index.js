@@ -20,6 +20,7 @@ import {
   import store from '../../redux/store.js';
 import { Abcd } from '../../redux/actions/index.js';
 import {UserDetails} from '../../redux/actions/UserDetails.js';
+import {AllUsers} from '../../redux/actions/AllUsers.js';
 import firestore from '@react-native-firebase/firestore';
 // import firebase from '@react-native-firebase/firebase';
 import moment from 'moment';
@@ -28,7 +29,10 @@ import Evillcons from 'react-native-vector-icons/EvilIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import ImagePicker from 'react-native-image-crop-picker';
 import storage from '@react-native-firebase/storage';
-// import { TouchableOpacity } from 'react-native-gesture-handler';
+import EvilIcons from 'react-native-vector-icons/EvilIcons';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+
+import {SearchAction} from '../../redux/actions/SearchAction.js';
 
 
 
@@ -41,6 +45,11 @@ const ChatScreen = (props) => {
   const [GroupChatModal , SetGroupChatModal ] = useState(false);
   const [GroupPhotoUrl , SetGroupPhotoUrl ] = useState(); 
   const [GroupName , SetGroupName ] = useState();
+  const [AllFirebaseUsers , SetAllFirebaseUsers] = useState({});
+  const [ InputValue , SetInputValue ] = useState();
+  const [DummyAllFirebaseUsers , SetDummyAllFirebaseUsers ] = useState();
+  const [UserSelected , SetUserSelected  ] = useState();
+
 
   useEffect(() => {
    
@@ -52,7 +61,7 @@ const ChatScreen = (props) => {
     // } )
 
       // SetDidUpdate(false);
-      console.log("saad1" , store.getState().UserDetails );
+      // console.log("saad1" , store.getState().UserDetails );
       let LoginedUser = store.getState().UserDetails;
        SetFirebaseUser(store.getState().UserDetails);
       firestore()
@@ -70,16 +79,27 @@ const ChatScreen = (props) => {
       
       }
         SetChattedUser(array);
-        console.log( "chatted arrays" , array);
+        // console.log( "chatted arrays" , array);
         // SetGroupChatModal(false);
         
       } )
 
-    
+      SetAllFirebaseUsers(store.getState().AllUsers);
+       console.log(store.getState().AllUsers);
+      store.subscribe(() => {
+        SetAllFirebaseUsers(store.getState().AllUsers);
+
+      } )
+      
     
     
 
   }, [])
+
+  const SearchFunction = (text) => {
+   
+    store.dispatch(SearchAction(text));
+  }
 
     const SignOut = async () => {
       store.dispatch(UserDetails(null));
@@ -101,7 +121,7 @@ const ChatScreen = (props) => {
       }
 
       const GroupChat = () => {
-        alert("group chat");
+        // alert("group chat");
         SetGroupChatModal(true);
       }
 
@@ -123,7 +143,7 @@ const ChatScreen = (props) => {
       } 
 
       const NavigateToChatBox = (Users) => {
-        console.log(Users , "abcjhb");
+        // console.log(Users , "abcjhb");
         let users = {
           name: Users.name,
           uid: Users.uid,
@@ -188,14 +208,42 @@ const ChatScreen = (props) => {
           </View>
         )
       }
+
+      const CreateGroup = () => {
+        console.log(AllFirebaseUsers.user);
+        let array = [];
+        if(GroupName && GroupPhotoUrl  )
+        {
+          let uidfilter = AllFirebaseUsers.user.filter((v, i) => {
+            // return v.onSelected == true;
+            if(v.onSelected) {
+              array.push(v.uid);
+            }
+          } )
+          console.log(array);
+        // console.log(GroupName);
+        // console.log(GroupPhotoUrl);
+        alert("create group");
+        }
+        else {
+          alert("Either Groou");
+        }
+      }
+
       const _renderModal = () => {
         return(
           <Modal
           animationType = "slide"
           isVisible = {true}
           onRequestClose= { () => { SetGroupChatModal(false) } }
-          // style={{ marginTop: '20%' }}
+          transparent = {true}
+
           >
+            <View
+          style={{ flex:1 , backgroundColor: 'rgba(0,0,0,0.4)' }}
+            
+            >
+            <View style={{  backgroundColor: 'white' , flex: 1 , marginTop: '30%' , borderTopLeftRadius: 20 , borderTopRightRadius: 20 }} >
             <Ionicons  
             size = {35}
             color = "blue"
@@ -228,13 +276,131 @@ const ChatScreen = (props) => {
             name="send"
             size={30}
             color = "blue"
+            onPress={ () => CreateGroup() }
             />
 
           </View>
+         
 
           </View>
-
+          <View>
+            
+            {_renderFindFriends()}
+          </View>
+          <View>
+            {_renderUsers()}
+          </View>
+          </View>
+            </View>
           </Modal>
+        )}
+
+       const ModalToChatBox = (users , index ) => {
+        //  SetGroupChatModal(false);
+        //  props.navigation.navigate('ChatBox' , {users})
+        console.log(users);
+        let counter ;
+        let AllUser = AllFirebaseUsers.user;
+        // console.log( "checking" , AllUser);
+        let filterArray = AllUser.filter((v, i) => {
+          return v.onSelected == true;
+        }) 
+          console.log("filter" , filterArray.length);
+        // if()
+        //  console.log(AllUsers?.user[index].name);
+        if(filterArray.length+1 < 4 )
+        {
+          AllUser[index].onSelected = !AllUser[index].onSelected ;
+        }
+        else if(users.onSelected){
+          AllUser[index].onSelected = !AllUser[index].onSelected ;
+
+        }
+        else  {
+                  alert("you can select more than 3 peoples"); 
+        }
+        // console.log("pata nhy" , AllUser[index]);
+        store.dispatch(AllUsers(AllUser));
+
+       } 
+
+        
+const _renderUsers = () => {
+  // console.log( "all users" , AllFirebaseUsers?.user);
+  return(
+
+    <View>
+      
+      {
+        
+        AllFirebaseUsers?.user?.map((users , index ) => {
+          // console.log("modalusers" , users );
+          return(
+              <TouchableOpacity
+              onPress={() => ModalToChatBox(users , index )   }
+              >
+                <View style={{ flexDirection: 'row' , padding: 10 , alignItems: 'center' , justifyContent: 'space-between'  }} > 
+                  
+                <View style={{ flexDirection: 'row' , alignItems: 'center'  }} >
+                  <View  >
+                <Image 
+                  source= {{ uri: users.photoUrl }}
+                  style={styles.userImage}
+                />
+                </View>
+                <View style={{   }} >
+                <Text style={{ fontSize: 17 , marginLeft: 15  }} >{users.name}</Text>
+                </View>
+                </View>
+                { users.onSelected && 
+                <View  style={{   }} >
+                <FontAwesome5 
+                name="check-circle"
+                color = "blue"
+                size = {28}
+                />
+              </View>  }
+                
+                </View>
+
+              </TouchableOpacity>
+          );
+        })
+      }
+     
+     
+    </View>
+  )
+  
+} 
+
+      
+
+      const _renderFindFriends = () => {
+        return (
+          <View>
+            <View style={{ height: 45 , border: 1 , borderRadius: 20 , borderWidth: 1 , elevation: 1 ,
+              marginTop: '5%' , borderColor: 'lightgrey' , marginHorizontal: '1%' , flexDirection: 'row' , 
+              alignItems: 'center', marginBottom: 20   }} >
+
+                <EvilIcons 
+                name = "search"
+                size ={35}
+                color ="grey"
+                // onPress={() => SearchFunction() }
+                />
+
+              <TextInput 
+              onChangeText = { (text) => SearchFunction(text) }
+              placeholder= "Find Friends"
+              style={styles.InputStyle}
+              value={InputValue}
+
+              />
+
+            </View>
+            {/* <Text>Header</Text> */}
+          </View>
         )
       }
 
