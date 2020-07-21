@@ -24,7 +24,11 @@ const ChatScreenStack = () => {
 
   <Stack.Navigator   >
 
-  <Stack.Screen name="Chat" component={ChatScreen} />
+  <Stack.Screen
+  options = {() => ({
+    headerShown: false
+  })}
+  name="Chat" component={ChatScreen} />
   <Stack.Screen name="Users" component={UsersScreen} />
   <Stack.Screen 
   options = {() => ({
@@ -90,7 +94,7 @@ const TabNabigator = () => {
     
     <Tab.Navigator>
       <Tab.Screen 
-      name="Chat" component={ChatScreen}
+      name="Chat" component={ChatScreenStack}
       options={({route}) => ({
         tabBarVisible: showTab(route, NotShowTab),
       })}

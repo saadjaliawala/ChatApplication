@@ -8,6 +8,8 @@ import {
     Button,
     TouchableOpacity,
     Image,
+    Modal,
+    TextInput
   } from 'react-native';
 
   
@@ -19,9 +21,13 @@ import {
 import { Abcd } from '../../redux/actions/index.js';
 import {UserDetails} from '../../redux/actions/UserDetails.js';
 import firestore from '@react-native-firebase/firestore';
+// import firebase from '@react-native-firebase/firebase';
 import moment from 'moment';
 import styles from './style.js';
 import Evillcons from 'react-native-vector-icons/EvilIcons';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import ImagePicker from 'react-native-image-crop-picker';
+import storage from '@react-native-firebase/storage';
 // import { TouchableOpacity } from 'react-native-gesture-handler';
 
 
@@ -32,7 +38,9 @@ const ChatScreen = (props) => {
   const [FirebaseUser , SetFirebaseUser] = useState();
   const [isDidUpdate , SetDidUpdate] = useState(true);
   const [ChattedUser , SetChattedUser] = useState();
-
+  const [GroupChatModal , SetGroupChatModal ] = useState(false);
+  const [GroupPhotoUrl , SetGroupPhotoUrl ] = useState(); 
+  const [GroupName , SetGroupName ] = useState();
 
   useEffect(() => {
    
@@ -63,6 +71,7 @@ const ChatScreen = (props) => {
       }
         SetChattedUser(array);
         console.log( "chatted arrays" , array);
+        // SetGroupChatModal(false);
         
       } )
 
@@ -90,6 +99,28 @@ const ChatScreen = (props) => {
           </View>
         )
       }
+
+      const GroupChat = () => {
+        alert("group chat");
+        SetGroupChatModal(true);
+      }
+
+      const ImagePickerFunction = async () => {
+        // alert("image picker");
+        ImagePicker.openPicker({
+          width: 300,
+          height: 400,
+          cropping: true
+        }).then( async image => {
+          // console.log(image.path);
+          const reference = storage().ref('images/' + new Date().getTime());
+          await reference.putFile(image.path);
+          const url = await reference.getDownloadURL();
+          console.log(url);
+          SetGroupPhotoUrl(url);
+          
+        });
+      } 
 
       const NavigateToChatBox = (Users) => {
         console.log(Users , "abcjhb");
@@ -147,15 +178,76 @@ const ChatScreen = (props) => {
           </View>
         )
       }
+      
+
+      const _renderGroupChat = () => {
+        return(
+          <View  >
+            <TouchableOpacity onPress={() => GroupChat() } style={{ height: 50 , width: 50 , borderRadius: 50 ,
+               backgroundColor: 'black'  , alignSelf: 'flex-end' }} ></TouchableOpacity>
+          </View>
+        )
+      }
+      const _renderModal = () => {
+        return(
+          <Modal
+          animationType = "slide"
+          isVisible = {true}
+          onRequestClose= { () => { SetGroupChatModal(false) } }
+          // style={{ marginTop: '20%' }}
+          >
+            <Ionicons  
+            size = {35}
+            color = "blue"
+            name ="md-close-outline"
+            onPress={() => { SetGroupChatModal(false) } }
+            style= {{ alignSelf: 'flex-end' }}
+            />
+
+
+            {/* <Text>saad</Text> */}
+            <View style={{ flexDirection: 'row' , alignItems: 'center' , justifyContent: 'space-between' , marginTop: 25 }} >
+              <View>
+          <Ionicons 
+          size={45}
+          color = "blue"
+          name ="image-outline"
+          onPress = {() => ImagePickerFunction() }
+          />
+          </View>
+          <View style={{ height: 50 , width: '70%' , borderWidth: 1.5 , borderColor: 'lightgrey' , borderRadius: 20 }} >
+            
+          <TextInput 
+          placeholder="Group Name"
+          onChangeText ={ (text) => { SetGroupName(text) } }
+          value={GroupName}
+          />
+          </View>
+          <View>
+            <Ionicons 
+            name="send"
+            size={30}
+            color = "blue"
+            />
+
+          </View>
+
+          </View>
+
+          </Modal>
+        )
+      }
 
 
     return(
-      <View>
+      <View style={{ flex:1 }} >
         { _renderHeader() }
 
-      {/* { _renderButton() } */}
+      { _renderButton() }
 
       {_renderChattedUser()}
+      {_renderGroupChat()}
+      {GroupChatModal && _renderModal() }
       </View>
     )
   }
