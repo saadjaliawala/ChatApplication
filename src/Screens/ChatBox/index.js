@@ -39,6 +39,7 @@ const ChatBoxScreen = (props) => {
   const [UserMessages , SetUserMessages ] = useState([]);
   const [GroupChat , SetGroupChat ] = useState(false);
   const [GroupPushKey , SetGroupPushKey] = useState();
+  const [IsTyping , SetIsTyping] = useState();
 
   useEffect(() => {
       // console.log("chat user" , props.route.params);
@@ -369,6 +370,56 @@ onChangeText("");
           </View>
         )}
 
+        const TextChange = (text) => {
+          onChangeText(text);
+          if(UidBool)
+          {
+            SetIsTyping(true);
+            setTimeout(() => {
+              CHATID[index].IsTyping = false;
+              // index = i;
+              firestore()
+              .collection('Users')
+              .doc(ChatUser.users?.uid)
+              .update({ChatId: CHATID})
+              // alert("Saad");
+              // SetIsTyping(false);
+            }, 4000);
+
+            let CHATID ;
+            let index;
+            firestore()
+        .collection('Users')
+        .doc(ChatUser.users?.uid)
+        .get()
+        .then(querySnapshot => {
+          CHATID = querySnapshot._data?.ChatId;
+
+          querySnapshot._data?.ChatId?.map((Data , i) => {
+      
+          if(Data.pushKey == PushedKey) {
+        // indexs = i;
+        // CHATSIDS[i].lastMessage = Textvalue;
+        // console.log("CHAT ID DONE " , CHATID);
+        CHATID[i].IsTyping = true;
+        index = i;
+        firestore()
+        .collection('Users')
+        .doc(ChatUser.users?.uid)
+        .update({ChatId: CHATID})
+
+      }
+
+    })
+
+  } )
+          }
+         
+          // alert("Saad");
+          // console.log(text);
+        }
+
+
        const _renderInput = () => {
          return(
            <View style={{  }} >
@@ -380,7 +431,7 @@ onChangeText("");
              style={{ paddingLeft: 10 }}
              />
               <TextInput 
-        onChangeText =  {(text) => onChangeText(text) } 
+        onChangeText =  {(text) => TextChange(text) } 
         multiline={true}
         style= {styles.InputStyle}
         placeholder= "Type a message"
