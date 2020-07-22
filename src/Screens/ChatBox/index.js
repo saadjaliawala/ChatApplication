@@ -37,9 +37,11 @@ const ChatBoxScreen = (props) => {
   const [Textvalue, onChangeText] = useState();
   const [PushedKey , SetPushedKey] = useState();
   const [UserMessages , SetUserMessages ] = useState([]);
+  const [GroupChat , SetGroupChat ] = useState(false);
+  const [GroupPushKey , SetGroupPushKey] = useState();
 
   useEffect(() => {
-      console.log("chat user" , props.route.params);
+      // console.log("chat user" , props.route.params);
       const CurrentChatUserInApp = props.route.params;
       SetChatUser( props.route.params);
       const CurrentUserInApp = store.getState().UserDetails;
@@ -47,6 +49,39 @@ const ChatBoxScreen = (props) => {
       // console.log(store.getState().UserDetails);
 
 
+    // console.log( "123" , CurrentChatUserInApp?.users?.AllUids);
+
+    if(CurrentChatUserInApp?.users?.AllUids)
+    {
+      SetGroupChat(true);
+      SetGroupPushKey(CurrentChatUserInApp?.users?.pushKey);
+      console.log(CurrentChatUserInApp?.users?.pushKey);
+      // alert("if");
+      firestore()
+      .collection('Chat')
+      .doc(CurrentChatUserInApp?.users?.pushKey)
+      .collection('Messages')
+      .onSnapshot(Data => {
+        console.log(Data, "sa");
+        let array = [];
+        
+        Data.forEach(( Datas ) => {
+          array.push({ 
+            message: Datas._data.message , 
+            senderUid: Datas._data.senderUid ,
+            timeStamp: Datas._data.timeStamp,
+            })
+         
+        } )
+        SetUserMessages(array);
+      } )
+    }
+
+
+
+
+    else {
+alert("else");
 
        firestore()
  .collection('Users')
@@ -113,7 +148,7 @@ const ChatBoxScreen = (props) => {
 
 
 
-
+    }
 
 
 },[])
@@ -126,7 +161,7 @@ const SendButtonPress = async () => {
 //   senderName: CurrentUser.user?.displayName,
 //  }
 
- if(! ChatIdBool  )
+ if(! ChatIdBool  && !GroupChat )
  {
 alert("Chat id false run");
  const pushKey = await firestore()
@@ -279,8 +314,40 @@ firestore()
     })
 
   } )
+}
 
 
+if(GroupChat)
+{
+  firestore()
+.collection('Chat')
+.doc(GroupPushKey)
+.collection('Messages')
+.add({
+  message: Textvalue,
+  senderUid: CurrentUser.user?.uid ,
+  senderName: CurrentUser.user?.displayName,
+  timeStamp : firestore.FieldValue.serverTimestamp(),
+})
+
+
+// alert("group chat");
+// let array = ChatUser.users.AllUids;
+// console.log(array.length );
+// for(let i=0 ; i<array.length; i++)
+// {
+//   // alert("saad");
+//   let CHATID;
+//   firestore()
+//   .collection('Users')
+//   .doc(array[i])
+//   .get()
+//   .then(querySnapshot => {
+//     console.log(querySnapshot);
+//      CHATID =   querySnapshot._data?.ChatId;
+//   })
+
+// }
 
 }
 
@@ -332,7 +399,7 @@ onChangeText("");
 
 
       const _renderMessages = () => {
-        // console.log("user messages" , UserMessages );
+        console.log("user messages" , UserMessages );
         return(
           <ScrollView style={{ marginBottom: 62 }} > 
             {UserMessages?.map((messages) => {

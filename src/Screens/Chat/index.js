@@ -72,9 +72,15 @@ const ChatScreen = (props) => {
         let array = [];
        { Data?._data?.ChatId  && 
         Data?._data?.ChatId.map((Datas) => {
+          if(Datas.GroupName) {
+            array.push({ name: Datas.GroupName , pushKey: Datas.pushKey , lastMessage: Datas.lastMessage
+            , uid: Datas.CreatorUid , AllUids: Datas.AllUids , photoUrl: Datas.GroupPhotoUrl  })
+          }
+          else {
           array.push({ name: Datas.name , pushKey: Datas.pushKey , uid: Datas.uid  
             , photoUrl: Datas.photoUrl , lastMessage: Datas.lastMessage  , timeStamp: Datas.timeStamp })
-          // console.log(Datas);
+          }
+          
         } )
       
       }
@@ -144,12 +150,29 @@ const ChatScreen = (props) => {
 
       const NavigateToChatBox = (Users) => {
         // console.log(Users , "abcjhb");
+        if(Users.AllUids) {
+          // alert("check");
+          let users = {
+            name: Users.name,
+            uid: Users.uid,
+            photoUrl: Users.photoUrl,
+            Group: true,
+            AllUids: Users.AllUids,
+            pushKey: Users.pushKey,
+
+          }
+          props.navigation.navigate('ChatBox' , {users} )
+
+        }
+        else {
         let users = {
           name: Users.name,
           uid: Users.uid,
           photoUrl: Users.photoUrl,
         }
         props.navigation.navigate('ChatBox' , {users} )
+
+      }
       }
 
       const _renderHeader = () => {
@@ -209,9 +232,10 @@ const ChatScreen = (props) => {
         )
       }
 
-      const CreateGroup = () => {
-        console.log(AllFirebaseUsers.user);
-        let array = [];
+      const CreateGroup = async () => {
+        // console.log(AllFirebaseUsers.user);
+        console.log("firebase" , FirebaseUser.user.uid);
+        let array = [FirebaseUser.user.uid];
         if(GroupName && GroupPhotoUrl  )
         {
           let uidfilter = AllFirebaseUsers.user.filter((v, i) => {
@@ -220,12 +244,34 @@ const ChatScreen = (props) => {
               array.push(v.uid);
             }
           } )
-          console.log(array);
+          const pushKey = await firestore()
+          .collection('Chat')
+          .add({})
+
+          let pushedKey = pushKey._documentPath?._parts[1];
+          array.map((v,i) => {
+            console.log(v);
+            firestore()
+            .collection('Users')
+            .doc(v)
+            .update({ 
+              ChatId: firestore.FieldValue.arrayUnion({
+                CreatorUid: FirebaseUser?.user?.uid ,
+                AllUids: array ,
+                GroupName: GroupName,
+                GroupPhotoUrl: GroupPhotoUrl ,
+                pushKey: pushedKey
+              })
+            })
+          } )
+          SetGroupChatModal(false);
+           console.log(array);
         // console.log(GroupName);
         // console.log(GroupPhotoUrl);
         alert("create group");
         }
         else {
+          console.log(array);
           alert("Either Groou");
         }
       }
