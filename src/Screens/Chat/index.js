@@ -41,7 +41,7 @@ const ChatScreen = (props) => {
 
   const [FirebaseUser , SetFirebaseUser] = useState();
   const [isDidUpdate , SetDidUpdate] = useState(true);
-  const [ChattedUser , SetChattedUser] = useState();
+  const [ChattedUser , SetChattedUser] = useState([]);
   const [GroupChatModal , SetGroupChatModal ] = useState(false);
   const [GroupPhotoUrl , SetGroupPhotoUrl ] = useState(); 
   const [GroupName , SetGroupName ] = useState();
@@ -49,19 +49,14 @@ const ChatScreen = (props) => {
   const [ InputValue , SetInputValue ] = useState();
   const [DummyAllFirebaseUsers , SetDummyAllFirebaseUsers ] = useState();
   const [UserSelected , SetUserSelected  ] = useState();
-
+  const [DummyChattedUser , SetDummyChattedUser ] = useState();
+  const [NewDummy , SetNewDummy] = useState();
 
   useEffect(() => {
    
-       
-    // store.subscribe(() => {
-    //   // alert("saad");
-    //   SetFirebaseUser(store.getState().UserDetails);
       
-    // } )
-
-      // SetDidUpdate(false);
-      // console.log("saad1" , store.getState().UserDetails );
+    
+    
       let LoginedUser = store.getState().UserDetails;
        SetFirebaseUser(store.getState().UserDetails);
       firestore()
@@ -89,21 +84,21 @@ const ChatScreen = (props) => {
         // SetGroupChatModal(false);
         
       } )
-
+      
+      // console.log(store.getState().AllUsers , "sasd12" );
       SetAllFirebaseUsers(store.getState().AllUsers);
-       console.log(store.getState().AllUsers);
+      //  console.log(store.getState().AllUsers);
       store.subscribe(() => {
         SetAllFirebaseUsers(store.getState().AllUsers);
-
+        
       } )
       
     
     
 
   }, [])
-
   const SearchFunction = (text) => {
-   
+    // 503033568
     store.dispatch(SearchAction(text));
   }
 
@@ -265,24 +260,47 @@ const ChatScreen = (props) => {
             })
           } )
           SetGroupChatModal(false);
-           console.log(array);
-        // console.log(GroupName);
-        // console.log(GroupPhotoUrl);
-        alert("create group");
+          //  console.log(array);
+       
+        // alert("create group");
+        // console.log(AllFirebaseUsers.dummyuser);
+        // store.dispatch(AllUsers(AllFirebaseUsers.dummyuser)); 
+        SetGroupName('');
+        SetGroupPhotoUrl('');
+        let AllUser = store.getState().AllUsers.user;
+          AllUser.map(( v, i ) => {
+            v.onSelected = false;
+          } )
+          // console.log(AllUser);
+          store.dispatch(AllUsers(AllUser));
+          
+        
         }
         else {
-          console.log(array);
-          alert("Either Groou");
+        
+          
+          // console.log(array);
+          // alert("Either Groou");
+          
         }
       }
+
+      const CloseModal = () => {
+
+        SetGroupChatModal(false);
+        // console.log(store.getState().AllUsers);
+          // store.dispatch(AllUsers(NewDummy));
+          // console.log(NewDummy);
+      }
+
 
       const _renderModal = () => {
         return(
           <Modal
           animationType = "slide"
           isVisible = {true}
-          onRequestClose= { () => { SetGroupChatModal(false) } }
-          transparent = {true}
+          onRequestClose= { () => {  } }
+          transparent = {true}r
 
           >
             <View
@@ -294,7 +312,7 @@ const ChatScreen = (props) => {
             size = {35}
             color = "blue"
             name ="md-close-outline"
-            onPress={() => { SetGroupChatModal(false) } }
+            onPress={() => CloseModal() }
             style= {{ alignSelf: 'flex-end' }}
             />
 
@@ -346,7 +364,8 @@ const ChatScreen = (props) => {
         //  props.navigation.navigate('ChatBox' , {users})
         console.log(users);
         let counter ;
-        let AllUser = AllFirebaseUsers.user;
+        let AllUser = store.getState().AllUsers.user;
+        let DummyUser = store.getState().AllUsers.dummyuser;
         // console.log( "checking" , AllUser);
         let filterArray = AllUser.filter((v, i) => {
           return v.onSelected == true;
@@ -365,8 +384,9 @@ const ChatScreen = (props) => {
         else  {
                   alert("you can select more than 3 peoples"); 
         }
-        // console.log("pata nhy" , AllUser[index]);
-        store.dispatch(AllUsers(AllUser));
+        // console.log(AllUser , 'string');
+        // console.log(DummyUser, "sasdsdf");
+        store.dispatch(AllUsers([...AllUser]));
 
        } 
 

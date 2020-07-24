@@ -41,6 +41,7 @@ const ChatBoxScreen = (props) => {
   const [GroupPushKey , SetGroupPushKey] = useState();
   const [IsTyping , SetIsTyping] = useState();
 
+
   useEffect(() => {
       // console.log("chat user" , props.route.params);
       const CurrentChatUserInApp = props.route.params;
@@ -57,7 +58,7 @@ const ChatBoxScreen = (props) => {
       SetGroupChat(true);
       SetGroupPushKey(CurrentChatUserInApp?.users?.pushKey);
       console.log(CurrentChatUserInApp?.users?.pushKey);
-      // alert("if");
+      alert("if");
       firestore()
       .collection('Chat')
       .doc(CurrentChatUserInApp?.users?.pushKey)
@@ -84,6 +85,9 @@ const ChatBoxScreen = (props) => {
     else {
 alert("else");
 
+      let isTypingPushKey ;
+      let isTypingBool ;
+
        firestore()
  .collection('Users')
  .doc(CurrentUserInApp.user?.uid)
@@ -93,19 +97,15 @@ alert("else");
    {
      SetChatIdBool(true);
     Data._data.ChatId.map((ddata) => {
-      // console.log(ddata.uid , "Chat id k andaar adeen ki uid");
-      // console.log(CurrentChatUserInApp?.users?.uid , "login kra hoa banda ki uid adeen");
-
-      // const Filter = ddata.filter(v => {
-      //   console.log("filter" , v);
-      // })
+     
       if(ddata.uid == CurrentChatUserInApp?.users?.uid )
       {
         // alert("Uid true");
         SetPushedKey(ddata.pushKey);
         SetUidBool(true);
-        
-        
+        isTypingBool = true;
+        isTypingPushKey = ddata.pushKey;
+
 
         firestore()
       .collection('Chat')
@@ -238,7 +238,7 @@ firestore()
 .doc(ChatUser.users?.uid)
 .update({
  ChatId: firestore.FieldValue.arrayUnion ({ uid: CurrentUser.user?.uid , 
-   name: CurrentUser.user?.displayName , pushKey: pushKey._documentPath?._parts[1] ,photoUrl: ChatUser.users?.photoUrl ,
+   name: CurrentUser.user?.displayName , pushKey: pushKey._documentPath?._parts[1] ,photoUrl: CurrentUser.users?.photoUrl ,
    lastMessage: Textvalue ,  timeStamp : new Date().getTime()  })
  
 })
@@ -372,52 +372,30 @@ onChangeText("");
 
         const TextChange = (text) => {
           onChangeText(text);
-          if(UidBool)
-          {
-            SetIsTyping(true);
-            setTimeout(() => {
-              CHATID[index].IsTyping = false;
-              // index = i;
-              firestore()
-              .collection('Users')
-              .doc(ChatUser.users?.uid)
-              .update({ChatId: CHATID})
-              // alert("Saad");
-              // SetIsTyping(false);
-            }, 4000);
-
-            let CHATID ;
+          let CHATID ;
             let index;
-            firestore()
-        .collection('Users')
-        .doc(ChatUser.users?.uid)
-        .get()
-        .then(querySnapshot => {
-          CHATID = querySnapshot._data?.ChatId;
+            if(UidBool)
+            {
+              let uid = CurrentUser.user?.uid;
+              // alert("SAaaaaaa");
+              firestore()
+              .collection('Chat')
+              .doc(PushedKey)
+              .set({ [CurrentUser.user?.uid] : true })
+              // .add({ IsTyping: true })
 
-          querySnapshot._data?.ChatId?.map((Data , i) => {
-      
-          if(Data.pushKey == PushedKey) {
-        // indexs = i;
-        // CHATSIDS[i].lastMessage = Textvalue;
-        // console.log("CHAT ID DONE " , CHATID);
-        CHATID[i].IsTyping = true;
-        index = i;
-        firestore()
-        .collection('Users')
-        .doc(ChatUser.users?.uid)
-        .update({ChatId: CHATID})
+              setTimeout(() => {
+                let uid = CurrentUser.user?.uid;
+              // alert("SAaaaaaa");
+              firestore()
+              .collection('Chat')
+              .doc(PushedKey)
+              .set({ [CurrentUser.user?.uid] : false })
+                
+              }, 3000);
 
-      }
-
-    })
-
-  } )
-          }
-         
-          // alert("Saad");
-          // console.log(text);
-        }
+            }
+            }
 
 
        const _renderInput = () => {

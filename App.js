@@ -82,9 +82,11 @@ const [FirebaseUser, SetFirebaseUser] = useState();
              }
              
          })
-
-         store.dispatch(AllUsers(AllUserArray));
+        //  const a = [...AllUserArray];
+        //  const b = [...AllUserArray];
+        store.dispatch(AllUsers(AllUserArray));
          store.dispatch(AllDummyUsers(AllUserArray));
+        //  store.dispatch(AllDummyUsers(AllUserArray));
       // console.log("all user array" , AllUserArray);
         
       })
