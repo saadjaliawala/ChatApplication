@@ -10,6 +10,9 @@ const reducer = (state = {}, action) => {
         case 'All_Dummy_Users': {
           return {...state, dummyuser: action.payload}
         }
+        case 'Users_Screen_Users': {
+          return {...state , userscreenuser: action.payload }
+        }
   
         default: {
           return state;

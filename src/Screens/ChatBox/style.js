@@ -7,20 +7,22 @@ export default styles = StyleSheet.create({
         width: 50
     },
     InputViewParent: {
-        position: 'absolute' ,
-         bottom: 0 ,
+        // height: 1000,
+        // position: 'absolute' ,
+        //  bottom: 0 ,
         //  padding: 5,
          margin: '1%',
           width: '98%' ,
-           flex: 1 ,
+        //    flex: 1 ,
         //    height: 50,
            borderRadius: 20,
-           borderWidth: 1,
+           borderWidth: 2,
+        //    borderColor: 'black',
            borderColor: 'lightgrey',
            flexDirection: 'row',
            alignItems: 'center',
-           minHeight: 50,
-
+        //    minHeight: 50,
+            maxHeight: 120,
     },
 
     InputStyle: {

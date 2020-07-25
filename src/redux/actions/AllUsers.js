@@ -23,3 +23,16 @@
       })
     } 
    }
+
+   
+  export const UsersScreenUsers = (UsersScreenUsers) => {
+
+
+
+    return dispatch => {
+      dispatch({
+        type: 'Users_Screen_Users',
+        payload: UsersScreenUsers
+      })
+    } 
+   }

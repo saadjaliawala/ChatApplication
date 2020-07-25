@@ -260,11 +260,20 @@ const ChatScreen = (props) => {
             })
           } )
           SetGroupChatModal(false);
+          let users = {
+            name: GroupName,
+            uid: FirebaseUser.user.uid,
+            photoUrl: GroupPhotoUrl,
+            Group: true,
+            AllUids: array,
+            pushKey: pushedKey,
+          }
+
           //  console.log(array);
        
         // alert("create group");
         // console.log(AllFirebaseUsers.dummyuser);
-        // store.dispatch(AllUsers(AllFirebaseUsers.dummyuser)); 
+        store.dispatch(AllUsers(AllFirebaseUsers.dummyuser)); 
         SetGroupName('');
         SetGroupPhotoUrl('');
         let AllUser = store.getState().AllUsers.user;
@@ -274,7 +283,8 @@ const ChatScreen = (props) => {
           // console.log(AllUser);
           store.dispatch(AllUsers(AllUser));
           
-        
+          props.navigation.navigate('ChatBox' , {users} )
+
         }
         else {
         
@@ -288,6 +298,8 @@ const ChatScreen = (props) => {
       const CloseModal = () => {
 
         SetGroupChatModal(false);
+        // console.log(AllFirebaseUsers.dummyuser);
+        store.dispatch(AllUsers(AllFirebaseUsers.dummyuser));
         // console.log(store.getState().AllUsers);
           // store.dispatch(AllUsers(NewDummy));
           // console.log(NewDummy);
@@ -384,8 +396,7 @@ const ChatScreen = (props) => {
         else  {
                   alert("you can select more than 3 peoples"); 
         }
-        // console.log(AllUser , 'string');
-        // console.log(DummyUser, "sasdsdf");
+        
         store.dispatch(AllUsers([...AllUser]));
 
        } 

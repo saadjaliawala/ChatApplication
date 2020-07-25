@@ -23,6 +23,7 @@ import auth from '@react-native-firebase/auth';
 import {UserDetails} from './src/redux/actions/UserDetails.js';
 import {AllUsers} from './src/redux/actions/AllUsers.js';
 import {AllDummyUsers} from './src/redux/actions/AllUsers.js';
+import {UsersScreenUsers} from './src/redux/actions/AllUsers.js';
 
 
 import {
@@ -86,6 +87,7 @@ const [FirebaseUser, SetFirebaseUser] = useState();
         //  const b = [...AllUserArray];
         store.dispatch(AllUsers(AllUserArray));
          store.dispatch(AllDummyUsers(AllUserArray));
+         store.dispatch(UsersScreenUsers(AllUserArray));
         //  store.dispatch(AllDummyUsers(AllUserArray));
       // console.log("all user array" , AllUserArray);
         

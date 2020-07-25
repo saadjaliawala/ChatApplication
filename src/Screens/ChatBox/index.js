@@ -21,6 +21,9 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import firestore from '@react-native-firebase/firestore';
 import moment from 'moment';
+import LottieView from 'lottie-react-native';
+
+// import av from '../../'
 // import firebase from '@react-native-firebase/firebase';
 // import styles from './style.js';
 
@@ -103,9 +106,16 @@ alert("else");
         // alert("Uid true");
         SetPushedKey(ddata.pushKey);
         SetUidBool(true);
-        isTypingBool = true;
-        isTypingPushKey = ddata.pushKey;
-
+        // isTypingBool = true;
+        // isTypingPushKey = ddata.pushKey;
+        firestore()
+        .collection('Chat')
+        .doc(ddata.pushKey)
+        .onSnapshot(IsTypingCheck => {
+          // console.log("idk " , IsTypingCheck._data.[CurrentChatUserInApp?.users?.uid] );
+          // console.log("idk " , IsTypingCheck?._data?.[CurrentUserInApp?.user?.uid] );
+          SetIsTyping( IsTypingCheck?._data?.[CurrentChatUserInApp?.users?.uid]);
+        })
 
         firestore()
       .collection('Chat')
@@ -116,8 +126,7 @@ alert("else");
           
           let array = [];
           Data.forEach(Datas => {
-            
-            // console.log(Datas);
+ 
             array.push({ message: Datas._data.message , 
             senderUid: Datas._data.senderUid ,
             timeStamp: Datas._data.timeStamp,
@@ -128,16 +137,9 @@ alert("else");
           SetUserMessages(array);
          
         })
-       
-
-       
-        
 
       }
-      // else {
-      //   SetUidBool(false);
-      //   alert("uid falase impo");
-      // }
+     
     })
    }
    else {
@@ -147,6 +149,7 @@ alert("else");
    }
  })   
 
+ 
 
 
     }
@@ -400,7 +403,7 @@ onChangeText("");
 
        const _renderInput = () => {
          return(
-           <View style={{  }} >
+           
            <View style={ styles.InputViewParent } >
              <Entypo 
              name= "emoji-happy"
@@ -423,14 +426,14 @@ onChangeText("");
         onPress={() => SendButtonPress() }
         />
            </View>
-           </View>
+           
          )}
 
 
       const _renderMessages = () => {
         console.log("user messages" , UserMessages );
         return(
-          <ScrollView style={{ marginBottom: 62 }} > 
+          <ScrollView style={{   }} > 
             {UserMessages?.map((messages) => {
               let seconds= messages?.timeStamp?.seconds;
               let usetime = moment(seconds * 1000).fromNow();
@@ -446,6 +449,7 @@ onChangeText("");
                 <View style={{ alignSelf: 'flex-end' , marginRight: 12 }} > 
                 <Text style={{ color: 'grey'  }} >{usetime}</Text>
                 </View>
+               
                 </View>
                 )
              }
@@ -464,13 +468,28 @@ onChangeText("");
         )
       }   
 
+      const _renderIsTyping = () => {
+        return(
+          // <View style={{    height: 35 }} >
+        <LottieView
+        loop
+         autoPlay
+        source={require('../../assets/typing.json')}
+        style={{  width: 50 , height: 50 , paddingLeft: 5   }}
+      />
+
+          // </View>
+   
+        )
+      }
 
 
   return(
-    <View style={{flex: 1 ,  borderWidth: 5}} >
+    <View style={{flex: 1 }} >
 
       { _renderFunction()}
       { _renderMessages()}
+      { IsTyping && _renderIsTyping()  }
       { _renderInput()}
     </View>
     

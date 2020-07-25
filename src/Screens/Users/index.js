@@ -15,6 +15,7 @@ import {
   import React , { useEffect , useState } from 'react';
   import firestore from '@react-native-firebase/firestore';
   import {AllUsers} from '../../redux/actions/AllUsers.js';
+  import { UsersScreenUsers } from '../../redux/actions/AllUsers.js';
   import { SearchAction } from '../../redux/actions/SearchAction.js';
 import store from '../../redux/store.js';
 import styles from './style.js';
@@ -70,7 +71,7 @@ const UsersScreen = (props) => {
         SetDidUpdate(false);
 
        SetAllFirebaseUsers(store.getState().AllUsers);
-       console.log(store.getState().AllUsers);
+      //  console.log(store.getState().AllUsers);
       store.subscribe(() => {
         SetAllFirebaseUsers(store.getState().AllUsers);
 
@@ -82,16 +83,16 @@ const UsersScreen = (props) => {
       const SearchFunction = (text) => {
         // SetInputValue(text);
                 
-        // let filter = AllFirebaseUsers?.dummyuser?.filter((v, i) => {
+        let filter = AllFirebaseUsers?.dummyuser?.filter((v, i) => {
          
 
-        //  return v.name.toLowerCase().startsWith(text.toLowerCase())
+         return v.name.toLowerCase().startsWith(text.toLowerCase())
 
-        // })
-        // console.log(filter);
-        // store.dispatch(AllUsers(filter));
+        })
+        console.log(filter);
+        store.dispatch(UsersScreenUsers(filter));
 
-        store.dispatch(SearchAction(text));
+        // store.dispatch(SearchAction(text));
       }
 
       const _renderHeader = () => {
@@ -129,7 +130,7 @@ const _renderUsers = () => {
        {/* <Text>Users Screen</Text> */}
       {/* { console.log(AllFirebaseUsers) } */}
       {
-        AllFirebaseUsers?.user?.map((users) => {
+        AllFirebaseUsers?.userscreenuser?.map((users) => {
           return(
               <TouchableOpacity
               onPress={() => props.navigation.navigate('ChatBox' , {users} )}
