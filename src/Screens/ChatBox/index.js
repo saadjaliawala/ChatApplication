@@ -60,14 +60,14 @@ const ChatBoxScreen = (props) => {
     {
       SetGroupChat(true);
       SetGroupPushKey(CurrentChatUserInApp?.users?.pushKey);
-      console.log(CurrentChatUserInApp?.users?.pushKey);
+      // console.log(CurrentChatUserInApp?.users?.pushKey);
       alert("if");
       firestore()
       .collection('Chat')
       .doc(CurrentChatUserInApp?.users?.pushKey)
       .collection('Messages')
       .onSnapshot(Data => {
-        console.log(Data, "sa");
+        // console.log(Data, "sa");
         let array = [];
         
         Data.forEach(( Datas ) => {
@@ -274,7 +274,7 @@ firestore()
   // console.log(CHATID , "chatt id" );
   // console.log( "query" ,querySnapshot);
   querySnapshot._data?.ChatId?.map((Data , i) => {
-    console.log(Data.pushKey == PushedKey );
+    // console.log(Data.pushKey == PushedKey );
     // console.log("data", Data );
     if(Data.pushKey == PushedKey)
 
@@ -282,7 +282,7 @@ firestore()
 
       index = i;
       CHATID[i].lastMessage = Textvalue;
-      console.log("CHAT ID DONE " , CHATID);
+      // console.log("CHAT ID DONE " , CHATID);
       firestore()
       .collection('Users')
       .doc(CurrentUser?.user?.uid)
@@ -336,22 +336,38 @@ if(GroupChat)
 
 
 // alert("group chat");
-// let array = ChatUser.users.AllUids;
-// console.log(array.length );
-// for(let i=0 ; i<array.length; i++)
-// {
-//   // alert("saad");
-//   let CHATID;
-//   firestore()
-//   .collection('Users')
-//   .doc(array[i])
-//   .get()
-//   .then(querySnapshot => {
-//     console.log(querySnapshot);
-//      CHATID =   querySnapshot._data?.ChatId;
-//   })
+let array = ChatUser.users.AllUids;
+console.log(array );
+for(let i=0 ; i<array.length; i++)
+{
+  console.log(i);
+  let CHATID;
+  firestore()
+  .collection('Users')
+  .doc(array[i])
+  .get()
+  .then(querySnapshot => {
+    // console.log(querySnapshot);
+     CHATID =   querySnapshot._data?.ChatId;
+     querySnapshot._data?.ChatId?.map((Data , index) => {
+      
+      if(Data.pushKey == GroupPushKey) {
+        console.log(i);
+        console.log("abc");
+        // indexs = i;
+        CHATID[index].lastMessage = Textvalue;
+        // console.log("CHAT ID DONE " , CHATID);
+        firestore()
+        .collection('Users')
+        .doc(array[i])
+        .update({ChatId: CHATID})
 
-// }
+      }
+
+    })
+  })
+
+}
 
 }
 
@@ -431,7 +447,7 @@ onChangeText("");
 
 
       const _renderMessages = () => {
-        console.log("user messages" , UserMessages );
+        // console.log("user messages" , UserMessages );
         return(
           <ScrollView style={{   }} > 
             {UserMessages?.map((messages) => {

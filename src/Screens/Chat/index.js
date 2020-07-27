@@ -188,7 +188,7 @@ const ChatScreen = (props) => {
 
       const _renderChattedUser = () => {
         return(
-          <View>
+          <ScrollView>
             { ChattedUser?.map(( Users ) => {
               let fromNowTime = Users.timeStamp;
               let useTime = moment(fromNowTime).fromNow(true);
@@ -213,7 +213,7 @@ const ChatScreen = (props) => {
             </TouchableOpacity>
         )
       }) }
-          </View>
+          </ScrollView>
         )
       }
       
@@ -222,7 +222,7 @@ const ChatScreen = (props) => {
         return(
           <View  >
             <TouchableOpacity onPress={() => GroupChat() } style={{ height: 50 , width: 50 , borderRadius: 50 ,
-               backgroundColor: 'black'  , alignSelf: 'flex-end' }} ></TouchableOpacity>
+               backgroundColor: 'black'  , alignSelf: 'flex-end' , position: 'absolute' , bottom: 10  }} ></TouchableOpacity>
           </View>
         )
       }
