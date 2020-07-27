@@ -66,6 +66,7 @@ const ChatBoxScreen = (props) => {
       .collection('Chat')
       .doc(CurrentChatUserInApp?.users?.pushKey)
       .collection('Messages')
+      .orderBy("timeStamp" , "asc")
       .onSnapshot(Data => {
         // console.log(Data, "sa");
         let array = [];
@@ -75,6 +76,7 @@ const ChatBoxScreen = (props) => {
             message: Datas._data.message , 
             senderUid: Datas._data.senderUid ,
             timeStamp: Datas._data.timeStamp,
+            senderName: Datas._data.senderName,
             })
          
         } )
@@ -460,7 +462,9 @@ onChangeText("");
                 <View  >
                 <View style={{ alignSelf: "flex-end" , padding: 15  , backgroundColor: 'blue' , minWidth: 100,
                  marginTop: 20, marginRight: 10, borderTopRightRadius: 25 , borderTopLeftRadius: 24  , borderBottomLeftRadius: 24  }} >
-                <Text style={{ color: 'white' }} >{messages.message}</Text>
+               
+                 <Text style={{ color: 'white' }} >{messages.message}</Text>
+
                 </View>
                 <View style={{ alignSelf: 'flex-end' , marginRight: 12 }} > 
                 <Text style={{ color: 'grey'  }} >{usetime}</Text>
@@ -473,6 +477,7 @@ onChangeText("");
               return(
                 <View style={{ alignSelf: "flex-start" , padding: 15  , backgroundColor: 'blue' ,
                 margin: 10 , borderTopRightRadius: 25 , borderTopLeftRadius: 24  , borderBottomLeftRadius: 24  }} >
+                  { messages.senderName && <Text style={{ color: 'white' }} >{messages.senderName}</Text>}
                 <Text>{messages.message}</Text>
                 </View>
                 )
