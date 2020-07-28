@@ -75,7 +75,7 @@ const ChatScreen = (props) => {
           array.push({ name: Datas.name , pushKey: Datas.pushKey , uid: Datas.uid  
             , photoUrl: Datas.photoUrl , lastMessage: Datas.lastMessage  , timeStamp: Datas.timeStamp })
           }
-          
+
         } )
       
       }
@@ -103,6 +103,18 @@ const ChatScreen = (props) => {
   }
 
     const SignOut = async () => {
+      // console.log(FirebaseUser.user);
+      const signout = await firestore()
+      .collection('Users')
+      .doc(FirebaseUser.user.uid)
+      .update({
+        // name: FirebaseUser.user.displayName ,
+        // email: FirebaseUser.user.email,
+        // photoUrl: FirebaseUser.user.photoURL ,
+        // uid: FirebaseUser.user.uid,
+        active: false
+        
+    }  )
       store.dispatch(UserDetails(null));
         LoginManager.logOut();
         auth().signOut();

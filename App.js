@@ -7,7 +7,7 @@
  * @flow strict-local
  */
 
-import React, {useEffect , useState } from 'react';
+import React, {useEffect , useRef , useState } from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -15,6 +15,7 @@ import {
   View,
   Text,
   StatusBar,
+  AppState,
 } from 'react-native';
 
 import Navigation from './src/Navigation/Stack.js';
@@ -40,20 +41,28 @@ const App = () => {
 
 const [FirebaseUser, SetFirebaseUser] = useState();
 const [isDidUpdate , SetDidUpdate] = useState(true);
+const appState = useRef(AppState.currentState);
+const [appStateVisible, setAppStateVisible] = useState(appState.current);
+const [currentUserActive , SetCurrentUserActive ] = useState();
+
 
   const onAuthStateChanged = (FirebaseUser) => {
 
     // let AllUserArray = [];
+    // console.log( "active" , currentUserActive);
 
+    // alert("on auth state change");
     
       // console.log("firebase user " , FirebaseUser);
       if(FirebaseUser){
         // alert("Saad");
         store.dispatch(UserDetails(FirebaseUser));
+        // console.log("Avv");
       }
       SetFirebaseUser(FirebaseUser);
 
-      if (FirebaseUser) {
+      if (FirebaseUser  ) {
+        // alert("Saad");
         //   console.log(FirebaseUser);
         //   const { FirebaseUser } = FirebaseUser;
           firestore()
@@ -63,9 +72,12 @@ const [isDidUpdate , SetDidUpdate] = useState(true);
               name: FirebaseUser.displayName ,
               email: FirebaseUser.email,
               photoUrl: FirebaseUser.photoURL ,
-              uid: FirebaseUser.uid
+              uid: FirebaseUser.uid,
+              active: true
+              
           } , {merge: true} )
       }
+     
 
       
       firestore()
@@ -74,7 +86,7 @@ const [isDidUpdate , SetDidUpdate] = useState(true);
         var AllUserArray2 = [];
         // console.log(querySnapshot);
         querySnapshot.forEach(Data => {
-          console.log(Data._data.uid);
+          // console.log(Data._data.uid);
                   if(FirebaseUser?.uid != Data._data.uid)
              {
               AllUserArray2.push(Data._data);
@@ -123,8 +135,62 @@ useEffect(() => {
     SetDidUpdate(false);
      auth().onAuthStateChanged(onAuthStateChanged);
   }
-    
+  AppState.addEventListener("change", _handleAppStateChange);
+
+  return () => {
+    AppState.removeEventListener("change", _handleAppStateChange);
+  };
+
+
 },[])
+
+
+const _handleAppStateChange = (nextAppState) => {
+   var User_Details ;
+  
+      // console.log(store.getState().UserDetails.user);
+      User_Details = store.getState().UserDetails.user;
+
+  console.log("user deatils" , User_Details );
+  if (
+    appState.current.match(/inactive|background/) &&
+    nextAppState === "active"
+  ) {
+    // console.log("App has come to the foreground!");
+  }
+    // console.log( "firebaseuser" , FirebaseUser);
+  if(nextAppState == "active" && User_Details  )
+  {
+    SetCurrentUserActive(true);
+    // alert("active true");
+    firestore()
+    .collection('Users')
+    .doc(User_Details.uid)
+    .update({
+        
+        active: true
+        
+    }  )
+  }
+  if(nextAppState == "background" && User_Details )
+  {
+    firestore()
+    .collection('Users')
+    .doc(User_Details.uid)
+    .update({
+        
+        active: false
+        
+    }  )
+
+  }
+  // console.log(nextAppState);
+  appState.current = nextAppState;
+  setAppStateVisible(appState.current);
+  // console.log("AppState", appState.current);
+  
+};
+
 
 return (
   <Provider store={store}>
