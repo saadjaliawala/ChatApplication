@@ -128,7 +128,7 @@ const _renderUsers = () => {
   return(
     <View>
        {/* <Text>Users Screen</Text> */}
-      {/* { console.log(AllFirebaseUsers) } */}
+      {/* { console.log(AllFirebaseUsers?.userscreenuser) } */}
       {
         AllFirebaseUsers?.userscreenuser?.map((users) => {
           return(

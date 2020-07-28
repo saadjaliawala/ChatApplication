@@ -39,15 +39,14 @@ import firestore from '@react-native-firebase/firestore';
 const App = () => {
 
 const [FirebaseUser, SetFirebaseUser] = useState();
-
-  const [isDidUpdate , SetDidUpdate] = useState(true);
+const [isDidUpdate , SetDidUpdate] = useState(true);
 
   const onAuthStateChanged = (FirebaseUser) => {
 
-    let AllUserArray = [];
+    // let AllUserArray = [];
 
     
-      console.log("firebase user " , FirebaseUser);
+      // console.log("firebase user " , FirebaseUser);
       if(FirebaseUser){
         // alert("Saad");
         store.dispatch(UserDetails(FirebaseUser));
@@ -71,27 +70,48 @@ const [FirebaseUser, SetFirebaseUser] = useState();
       
       firestore()
       .collection('Users')
-      .get()
-      .then(querySnapshot => {
-        
-         
-         querySnapshot.forEach(documentSnapShot => {
-            //  console.log(documentSnapShot.data());
-             if(FirebaseUser.uid != documentSnapShot.data().uid)
+      .onSnapshot(querySnapshot => {
+        var AllUserArray2 = [];
+        // console.log(querySnapshot);
+        querySnapshot.forEach(Data => {
+          console.log(Data._data.uid);
+                  if(FirebaseUser?.uid != Data._data.uid)
              {
-             AllUserArray.push(documentSnapShot.data());
+              AllUserArray2.push(Data._data);
              }
+        })
+        store.dispatch(AllUsers(AllUserArray2));
+         store.dispatch(AllDummyUsers(AllUserArray2));
+         store.dispatch(UsersScreenUsers(AllUserArray2));
+      } )
+
+
+      // .get()
+      // .then(querySnapshot => {
+        
+               
+      //    querySnapshot.forEach(documentSnapShot => {
+      //        console.log(documentSnapShot.data());
+      //        if(FirebaseUser.uid != documentSnapShot.data().uid)
+      //        {
+      //        AllUserArray.push(documentSnapShot.data());
+      //        }
              
-         })
+      //    })
+
         //  const a = [...AllUserArray];
         //  const b = [...AllUserArray];
-        store.dispatch(AllUsers(AllUserArray));
-         store.dispatch(AllDummyUsers(AllUserArray));
-         store.dispatch(UsersScreenUsers(AllUserArray));
+        // console.log("all user array" , AllUserArray);
+
+        // store.dispatch(AllUsers(AllUserArray2));
+        //  store.dispatch(AllDummyUsers(AllUserArray2));
+        //  store.dispatch(UsersScreenUsers(AllUserArray2));
+
         //  store.dispatch(AllDummyUsers(AllUserArray));
       // console.log("all user array" , AllUserArray);
         
-      })
+
+      // })
       
   }
 

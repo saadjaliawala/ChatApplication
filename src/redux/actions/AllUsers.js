@@ -27,7 +27,7 @@
    
   export const UsersScreenUsers = (UsersScreenUsers) => {
 
-
+    console.log(UsersScreenUsers);
 
     return dispatch => {
       dispatch({

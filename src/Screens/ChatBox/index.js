@@ -48,7 +48,7 @@ const ChatBoxScreen = (props) => {
   useEffect(() => {
       // console.log("chat user" , props.route.params);
       const CurrentChatUserInApp = props.route.params;
-      SetChatUser( props.route.params);
+      SetChatUser( props.route.params );
       const CurrentUserInApp = store.getState().UserDetails;
       SetCurrentUser(store.getState().UserDetails);
       // console.log(store.getState().UserDetails);
@@ -88,7 +88,7 @@ const ChatBoxScreen = (props) => {
 
 
     else {
-alert("else");
+// alert("else");
 
       let isTypingPushKey ;
       let isTypingBool ;
@@ -169,7 +169,7 @@ const SendButtonPress = async () => {
 
  if(! ChatIdBool  && !GroupChat )
  {
-alert("Chat id false run");
+// alert("Chat id false run");
  const pushKey = await firestore()
  .collection('Chat')
 
@@ -211,7 +211,7 @@ firestore()
 
  if (!UidBool && ChatIdBool ) {
 
-alert("send else run");
+// alert("send else run");
 const pushKey = await firestore()
 .collection('Chat')
 
@@ -253,7 +253,7 @@ firestore()
 
 if(UidBool  )
 {
-  alert("send uid true run");
+  // alert("send uid true run");
 // alert("booltrue");
 firestore()
 .collection('Chat')
@@ -354,8 +354,8 @@ for(let i=0 ; i<array.length; i++)
      querySnapshot._data?.ChatId?.map((Data , index) => {
       
       if(Data.pushKey == GroupPushKey) {
-        console.log(i);
-        console.log("abc");
+        // console.log(i);
+        // console.log("abc");
         // indexs = i;
         CHATID[index].lastMessage = Textvalue;
         // console.log("CHAT ID DONE " , CHATID);
