@@ -9,6 +9,7 @@ export default styles = StyleSheet.create({
             // margin: 10
           },
           InputStyle: {
+            backgroundColor: 'white'
             
           }
 })

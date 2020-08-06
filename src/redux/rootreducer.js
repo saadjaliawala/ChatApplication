@@ -2,6 +2,7 @@ import {combineReducers} from 'redux';
 import AbcdChanged from './reducers/AbcdChanged';
 import UserDetails from './reducers/UserDetails';
 import AllUsers from './reducers/AllUsers';
+import ChatsUser from './reducers/ChatsUser';
 // import AllDummyUsers from './reducers/AllUsers';
 // import AuthReducer from './Reducer/AuthReducer';
 // import UserReducer from './Reducer/UserReducer';
@@ -15,6 +16,7 @@ export default combineReducers({
 AbcdChanged,
 UserDetails,
 AllUsers,
+ChatsUser
 // AllDummyUsers
 
 

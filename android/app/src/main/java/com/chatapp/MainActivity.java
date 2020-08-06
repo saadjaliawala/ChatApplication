@@ -1,4 +1,7 @@
 package com.mychatapp;
+import android.os.Bundle;
+import org.devio.rn.splashscreen.SplashScreen;
+
 
 import com.facebook.react.ReactActivity;
 
@@ -10,6 +13,7 @@ public class MainActivity extends ReactActivity {
    */
   @Override
   protected String getMainComponentName() {
+    SplashScreen.show(this);
     return "chatApp";
   }
 }

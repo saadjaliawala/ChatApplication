@@ -99,13 +99,14 @@ const UsersScreen = (props) => {
         return (
           <View>
             <View style={{ height: 45 , border: 1 , borderRadius: 20 , borderWidth: 1 , elevation: 1 ,
-              marginTop: '2%' , borderColor: 'lightgrey' , marginHorizontal: '1%' , flexDirection: 'row' , 
-              alignItems: 'center', marginBottom: 20   }} >
+              marginTop: '2%'  , marginHorizontal: '1%' , flexDirection: 'row' , 
+              alignItems: 'center', marginBottom: 20  , backgroundColor: 'white' , borderColor: 'lightgrey' }} >
 
                 <EvilIcons 
                 name = "search"
                 size ={35}
                 color ="grey"
+                // style={{ backgroundColor: 'white' }}
                 // onPress={() => SearchFunction() }
                 />
 

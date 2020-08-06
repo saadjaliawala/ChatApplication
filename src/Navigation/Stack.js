@@ -18,11 +18,40 @@ const Navigation = (props) => {
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
+// const ChatBoxScreenStack = () => {
+//   return(
+ 
+//    <Stack.Navigator   >
+
+// <Stack.Screen
+//   options = {() => ({
+//     headerShown: false
+//   })}
+//   name="ChatBox" component={ChatBoxScreen} />
+ 
+//    <Stack.Screen
+//    options = {() => ({
+//      headerShown: false
+//    })}
+//    name="Chat" component={ChatScreenStack} />
+   
+   
+//      </Stack.Navigator>
+//   )
+//  }
+ 
+
 
 const ChatScreenStack = () => {
  return(
 
-  <Stack.Navigator   >
+  <Stack.Navigator 
+
+  screenOptions={{
+    animationEnabled: Platform.OS === 'ios'
+  }}
+  >
+    
 
   <Stack.Screen
   options = {() => ({
@@ -53,7 +82,7 @@ const UserScreenStack = () => {
       options = {() => ({
         headerShown: false
       })}
-      name="ChatBox" component={ChatBoxScreen} />
+      name="ChatBox" component={ChatScreenStack} />
     </Stack.Navigator>
   )
 }

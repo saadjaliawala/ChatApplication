@@ -23,13 +23,14 @@ const Header = (props) => {
 
     useEffect(() => {
         SetChatUser(props);
-        console.log("from props" , props);
+        // console.log("from props" , props);
 
         SetProps(props.props);
        
     },[])
 
     const GoBacks = () => {
+      // props.props.navigation.navigate('Chat');
       props.props.navigation.goBack();
 
     }

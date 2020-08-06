@@ -17,6 +17,7 @@ import auth from '@react-native-firebase/auth';
   import store from '../../redux/store.js';
   import {Abcd} from '../../redux/actions/index.js';
   import {FbLogin} from '../../redux/actions/index.js';
+  import {GoogleLogin} from '../../redux/actions/GoogleLogin.js';
   
 
 //   import Navigation from './src/Navigation/Stack.js';
@@ -44,29 +45,31 @@ const HomeScreen = (props) => {
 
        
    
-    const GoogleSignIn = async () => {
+    const GoogleSignIn =  () => {
      
-      try {
+      // try {
      
-      const { idToken } = await GoogleSignin.signIn();
+      // const { idToken } = await GoogleSignin.signIn();
 
-      // Create a Google credential with the token
-      const googleCredential = auth.GoogleAuthProvider.credential(idToken);
+      // // Create a Google credential with the token
+      // const googleCredential = auth.GoogleAuthProvider.credential(idToken);
       
     
-      // Sign-in the user with the credential
-      return auth().signInWithCredential(googleCredential);
-      // const user =  auth().signInWithCredential(googleCredential);
-      // alert(JSON.stringify(user));
-      // return user;
+      // // Sign-in the user with the credential
+      // return auth().signInWithCredential(googleCredential);
+      // // const user =  auth().signInWithCredential(googleCredential);
+      // // alert(JSON.stringify(user));
+      // // return user;
 
       
-      }
+      // }
 
-      catch(error)
-      {
-        alert(error);
-      }
+      // catch(error)
+      // {
+      //   alert(error);
+      // }
+
+      store.dispatch(GoogleLogin())
       
 
 

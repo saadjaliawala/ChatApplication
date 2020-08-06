@@ -18,6 +18,8 @@ import {
   AppState,
 } from 'react-native';
 
+import SplashScreen from 'react-native-splash-screen'
+
 import Navigation from './src/Navigation/Stack.js';
 import store from './src/redux/store';
 import auth from '@react-native-firebase/auth';
@@ -45,8 +47,12 @@ const appState = useRef(AppState.currentState);
 const [appStateVisible, setAppStateVisible] = useState(appState.current);
 const [currentUserActive , SetCurrentUserActive ] = useState();
 
+const [settingsnapshot , setsettingsnapshot ] = useState(true);
+
 
   const onAuthStateChanged = (FirebaseUser) => {
+
+    // console.log(FirebaseUser);
 
     // let AllUserArray = [];
     // console.log( "active" , currentUserActive);
@@ -65,6 +71,7 @@ const [currentUserActive , SetCurrentUserActive ] = useState();
         // alert("Saad");
         //   console.log(FirebaseUser);
         //   const { FirebaseUser } = FirebaseUser;
+
           firestore()
           .collection('Users')
           .doc(FirebaseUser.uid)
@@ -76,16 +83,30 @@ const [currentUserActive , SetCurrentUserActive ] = useState();
               active: true
               
           } , {merge: true} )
+        
       }
-     
+      
+      // if(settingsnapshot) {
 
+      //   firestore()
+      // .collection('Users')
+      // .onSnapshot(patanhy => {
+      //   console.log("pata nhy ")
+      // })
+
+      // setsettingsnapshot(false);
+
+      // }
+      
+      
       
       firestore()
       .collection('Users')
       .onSnapshot(querySnapshot => {
+        // console.log("adcbhfb");
         var AllUserArray2 = [];
         // console.log(querySnapshot);
-        querySnapshot.forEach(Data => {
+        querySnapshot?.forEach(Data => {
           // console.log(Data._data.uid);
                   if(FirebaseUser?.uid != Data._data.uid)
              {
@@ -132,14 +153,17 @@ const [currentUserActive , SetCurrentUserActive ] = useState();
 useEffect(() => {
   if(isDidUpdate) 
   {
+    console.log("abcd");
     SetDidUpdate(false);
      auth().onAuthStateChanged(onAuthStateChanged);
-  }
-  AppState.addEventListener("change", _handleAppStateChange);
 
-  return () => {
-    AppState.removeEventListener("change", _handleAppStateChange);
-  };
+     SplashScreen.hide();
+  }
+  // AppState.addEventListener("change", _handleAppStateChange);
+
+  // return () => {
+  //   AppState.removeEventListener("change", _handleAppStateChange);
+  // };
 
 
 },[])
@@ -151,7 +175,7 @@ const _handleAppStateChange = (nextAppState) => {
       // console.log(store.getState().UserDetails.user);
       User_Details = store.getState().UserDetails.user;
 
-  console.log("user deatils" , User_Details );
+  // console.log("user deatils" , User_Details );
   if (
     appState.current.match(/inactive|background/) &&
     nextAppState === "active"

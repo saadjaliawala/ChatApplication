@@ -167,6 +167,8 @@ const SendButtonPress = async () => {
 //   senderName: CurrentUser.user?.displayName,
 //  }
 
+// props.navigation.navigate('Chat');
+
  if(! ChatIdBool  && !GroupChat )
  {
 // alert("Chat id false run");
@@ -211,7 +213,7 @@ firestore()
 
  if (!UidBool && ChatIdBool ) {
 
-// alert("send else run");
+alert("send else run");
 const pushKey = await firestore()
 .collection('Chat')
 
@@ -227,7 +229,7 @@ firestore()
  senderName: CurrentUser.user?.displayName,
  timeStamp : firestore.FieldValue.serverTimestamp(),
 })
-
+// console.log( "current user", CurrentUser.user);
 firestore()
 .collection('Users')
 .doc(CurrentUser?.user?.uid)
@@ -242,8 +244,8 @@ firestore()
 .collection('Users')
 .doc(ChatUser.users?.uid)
 .update({
- ChatId: firestore.FieldValue.arrayUnion ({ uid: CurrentUser.user?.uid , 
-   name: CurrentUser.user?.displayName , pushKey: pushKey._documentPath?._parts[1] ,photoUrl: CurrentUser.users?.photoUrl ,
+ ChatId: firestore.FieldValue.arrayUnion({ uid: CurrentUser.user?.uid , 
+   name: CurrentUser.user?.displayName , pushKey: pushKey._documentPath?._parts[1] ,photoUrl: CurrentUser.user?.photoURL ,
    lastMessage: Textvalue ,  timeStamp : new Date().getTime()  })
  
 })
@@ -339,7 +341,7 @@ if(GroupChat)
 
 // alert("group chat");
 let array = ChatUser.users.AllUids;
-console.log(array );
+// console.log(array );
 for(let i=0 ; i<array.length; i++)
 {
   console.log(i);
@@ -380,6 +382,7 @@ onChangeText("");
 
 
   const _renderFunction = () => {
+    console.log("Abcdd");
     // console.log("current user" , CurrentUser);
       return(
 
